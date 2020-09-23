@@ -1,0 +1,23 @@
+﻿[
+  {
+    "image": "trails/countryside-trail.jpg",
+    "name": "Countryside Ramble",
+    "location": "Durbach, Germany",
+    "time": "3h 15m",
+    "length": 11
+  },
+  {
+    "image": "trails/woodland-walk.jpg",
+    "name": "Woodland Walk",
+    "location": "Nottingham, UK",
+    "time": "1h 20m",
+    "length": 4
+  },
+  {
+    "image": "trails/alpine-hike.jpg",
+    "name": "Alpine Hike",
+    "location": "Furna, Switzerland",
+    "time": "2h 30m",
+    "length": 6
+  }
+]
