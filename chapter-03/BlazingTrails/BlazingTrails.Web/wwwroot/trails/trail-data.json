@@ -1,0 +1,95 @@
+﻿[
+  {
+    "id": 1,
+    "image": "trails/countryside-trail.jpg",
+    "name": "Countryside Ramble",
+    "location": "Durbach, Germany",
+    "time": "3h 15m",
+    "length": 11,
+    "description": "This is a beautiful countryside walk with lots of amazing views and lots of wildlife to see.",
+    "route": [
+      {
+        "stage": 1,
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      },
+      {
+        "stage": 2,
+        "description": "Curabitur interdum molestie tempus."
+      },
+      {
+        "stage": 3,
+        "description": "Suspendisse convallis nunc ut lorem cursus, ac venenatis neque maximus."
+      },
+      {
+        "stage": 4,
+        "description": "Aenean nisi dolor, sollicitudin quis pellentesque vel, pharetra et ex."
+      },
+      {
+        "stage": 5,
+        "description": "Vestibulum vulputate velit quis mi suscipit, eget pharetra enim tristique."
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "image": "trails/woodland-walk.jpg",
+    "name": "Woodland Walk",
+    "location": "Nottingham, UK",
+    "time": "1h 20m",
+    "length": 4,
+    "description": "If you like trees, this is the trail for you! Get lost for hours in the tall trees listening to the sound of the birds. Just watch out for the squirrels!!",
+    "route": [
+      {
+        "stage": 1,
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      },
+      {
+        "stage": 2,
+        "description": "Curabitur interdum molestie tempus."
+      },
+      {
+        "stage": 3,
+        "description": "Suspendisse convallis nunc ut lorem cursus, ac venenatis neque maximus."
+      },
+      {
+        "stage": 4,
+        "description": "Aenean nisi dolor, sollicitudin quis pellentesque vel, pharetra et ex."
+      },
+      {
+        "stage": 5,
+        "description": "Vestibulum vulputate velit quis mi suscipit, eget pharetra enim tristique."
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "image": "trails/alpine-hike.jpg",
+    "name": "Alpine Hike",
+    "location": "Furna, Switzerland",
+    "time": "2h 30m",
+    "length": 6,
+    "description": "Do you like snow and thin air? Then you're going to love this exhilarating walk up a mountain. Make sure you bring lots of chocolate - you'll need the energy.",
+    "route": [
+      {
+        "stage": 1,
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      },
+      {
+        "stage": 2,
+        "description": "Curabitur interdum molestie tempus."
+      },
+      {
+        "stage": 3,
+        "description": "Suspendisse convallis nunc ut lorem cursus, ac venenatis neque maximus."
+      },
+      {
+        "stage": 4,
+        "description": "Aenean nisi dolor, sollicitudin quis pellentesque vel, pharetra et ex."
+      },
+      {
+        "stage": 5,
+        "description": "Vestibulum vulputate velit quis mi suscipit, eget pharetra enim tristique."
+      }
+    ]
+  }
+]

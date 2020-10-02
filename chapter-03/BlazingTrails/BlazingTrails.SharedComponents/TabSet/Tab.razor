@@ -1,0 +1,18 @@
+﻿@if (TabSet.SelectedTab == this)
+{
+    @ChildContent
+}
+
+@code {
+
+    [CascadingParameter] public TabSet TabSet { get; set; }
+
+    [Parameter] public string Title { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    protected override void OnInitialized()
+    {
+        TabSet.AddTab(this);
+    }
+
+}
