@@ -7,32 +7,23 @@
 }
 else
 {
-    <h3>Favourites</h3>
+    <TrailDetails Trail="_selectedTrail" />
     <div class="row row-cols-1 row-cols-md-2">
-        @foreach (var trail in _trails.Where(_ => _.IsFavourite))
-        {
-            <div class="col mb-4">
-                <TrailCard Trail="trail"
-                           OnFavouriteToggled="HandleFavouriteToggle" />
-            </div>
-        }
-    </div>
 
-    <h3>All Trails</h3>
-    <div class="row row-cols-1 row-cols-md-2">
         @foreach (var trail in _trails)
         {
             <div class="col mb-4">
-                <TrailCard Trail="trail"
-                           OnFavouriteToggled="HandleFavouriteToggle" />
+                <TrailCard Trail="trail" OnSelected="HandleTrailSelected" />
             </div>
-        }
-    </div>
 
+        }
+
+    </div>
 }
 
 @code {
     private IEnumerable<Trail> _trails;
+    private Trail? _selectedTrail;
 
     protected override async Task OnInitializedAsync()
     {
@@ -46,10 +37,8 @@ else
         }
     }
 
-    private void HandleFavouriteToggle(Trail trail)
+    private void HandleTrailSelected(Trail trail)
     {
-        trail.IsFavourite = !trail.IsFavourite;
+        _selectedTrail = trail;
     }
-
-
 }
