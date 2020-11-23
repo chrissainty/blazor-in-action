@@ -1,0 +1,61 @@
+﻿@page "/"
+@implements IDisposable
+@implements IAsyncDisposable
+
+<h1>Componet Lifecycle</h1>
+<p>Check the browser console for details...</p>
+
+@code {
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        Console.WriteLine("SetParametersAsync - Begin");
+        await base.SetParametersAsync(parameters);
+        Console.WriteLine("SetParametersAsync - End");
+    }
+
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("OnInitialized");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("OnInitializedAsync");
+
+        //Console.WriteLine("OnInitializedAsync - Begin");
+        //await Task.Delay(300);
+        //Console.WriteLine("OnInitializedAsync - End");
+    }
+
+    protected override void OnParametersSet()
+    {
+        Console.WriteLine("OnParametersSet");
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Console.WriteLine("OnParametersSetAsync");
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        Console.WriteLine($"OnAfterRender (First render: {firstRender})");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        Console.WriteLine($"OnAfterRenderAsync (First render: {firstRender})");
+    }
+
+    public void Dispose()
+    {
+        Console.WriteLine($"Dispose");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        Console.WriteLine($"DisposeAsync");
+    }
+
+}
