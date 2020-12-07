@@ -1,0 +1,177 @@
+﻿@page "/add-trail"
+@using System.IO;
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Add Trail</li>
+    </ol>
+</nav>
+
+<h3 class="mt-5 mb-4">Add a trail</h3>
+
+<EditForm Model="_trail">
+    <FluentValidationValidator />
+
+    <div class="card bg-light">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-4">
+                    <h4>Basic Details</h4>
+                    <p class="text-secondary">This information is used to identify the trail and can be searched to help hikers find it.</p>
+                </div>
+
+                <div class="col-8">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="trailName" class="font-weight-bold text-secondary">Name</label>
+                                <InputText @bind-Value="_trail.Name" class="form-control" id="trailName" />
+                                <ValidationMessage For="@(() => _trail.Name)" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="trailDescription" class="font-weight-bold text-secondary">Description</label>
+                                <InputTextArea @bind-Value="_trail.Description" rows="6" class="form-control" id="trailDescription" />
+                                <ValidationMessage For="@(() => _trail.Description)" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="trailLocation" class="font-weight-bold text-secondary">Location</label>
+                                <InputText @bind-Value="_trail.Location" class="form-control" id="trailLocation" />
+                                <ValidationMessage For="@(() => _trail.Location)" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="trailImage" class="font-weight-bold text-secondary">Image</label>
+                                <InputFile OnChange="LoadTrailImage" class="form-control-file" id="trailImage" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card bg-light mt-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-4">
+                    <h4>Difficulty</h4>
+                    <p class="text-secondary">Help other hikers out by telling them the length of the trail is how long it might take them.</p>
+                </div>
+
+                <div class="col-8">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label for="trailLength" class="font-weight-bold text-secondary">Length (km)</label>
+                                <InputNumber @bind-Value="_trail.Length" class="form-control" id="trailLength" />
+                                <ValidationMessage For="@(() => _trail.Length)" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="form-group">
+                                <label for="trailTime" class="font-weight-bold text-secondary">Time</label>
+                                <InputTime @bind-Value="_trail.TimeInMinutes" class="form-control" id="trailTime" />
+                                <ValidationMessage For="@(() => _trail.TimeInMinutes)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card bg-light mt-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-4">
+                    <h4>Route Instructions</h4>
+                    <p class="text-secondary">Route instructions are a guide for the trail. This helps hikers new to the trail stay on track.</p>
+                </div>
+
+                <div class="col-8">
+                    @foreach (var routeInstruction in _trail.Route)
+                    {
+                        <div class="row">
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="routeInstructionStage" class="font-weight-bold text-secondary">Stage</label>
+                                    <InputNumber @bind-Value="routeInstruction.Stage" class="form-control" id="routeInstructionStage" />
+                                    <ValidationMessage For="@(() => routeInstruction.Stage)" />
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="routeInstructionDescription" class="font-weight-bold text-secondary">Description</label>
+                                    <InputText @bind-Value="routeInstruction.Description" class="form-control" id="routeInstructionDescription" />
+                                    <ValidationMessage For="@(() => routeInstruction.Description)" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="col">
+                            @*tell people if this isn't type button the form blows up!*@
+                            <button class="btn btn-outline-primary" type="button" @onclick="AddRouteInstruction">Add Instruction</button>
+                            <ValidationMessage For="@(() => _trail.Route)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 mb-5">
+        <div class="row">
+            <div class="offset-4 col-8 text-right">
+                <button class="btn btn-outline-secondary" type="button" @onclick="@(() => _trail = new AddTrailRequest())">Reset</button>
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    AddTrailRequest _trail = new AddTrailRequest();
+
+    protected override void OnInitialized()
+    {
+        //_trail.Route = new List<RouteInstruction>();
+        //_trail.Route.Add(new RouteInstruction());
+    }
+
+    private void AddRouteInstruction()
+    {
+        //_trail.Route.Add(new RouteInstruction());
+    }
+
+    private async Task LoadTrailImage(InputFileChangeEventArgs e)
+    {
+        var format = "image/jpeg";
+        var imageFile = await e.File.RequestImageFileAsync(format, 640, 426);
+
+        using var fileStream = imageFile.OpenReadStream();
+        using var memoryStream = new MemoryStream();
+        await fileStream.CopyToAsync(memoryStream);
+
+        _trail.Image = $"data:{format};base64,{Convert.ToBase64String(memoryStream.ToArray())}";
+    }
+}

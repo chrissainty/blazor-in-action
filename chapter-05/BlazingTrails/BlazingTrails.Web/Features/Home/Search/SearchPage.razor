@@ -1,0 +1,96 @@
+﻿@page "/search/{SearchTerm}"
+@implements IDisposable
+@inject HttpClient Http
+@inject NavigationManager NavManager
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Search</li>
+    </ol>
+</nav>
+
+<h3 class="mt-5 mb-4">Search results for "@SearchTerm"</h3>
+
+<SearchFilter SearchTerm="@SearchTerm" />
+
+@if (_searchResults == null)
+{
+    <p>Loading search results...</p>
+}
+else
+{
+    <TrailDetails Trail="_selectedTrail" />
+
+    <div class="grid">
+
+        @foreach (var trail in _searchResults)
+        {
+            <TrailCard Trail="trail" OnSelected="HandleTrailSelected" />
+        }
+
+    </div>
+}
+
+@code {
+    private IEnumerable<Trail> _searchResults;
+    private IEnumerable<Trail> _cachedSearchResults;
+    private Trail? _selectedTrail;
+    private string _searchTerm;
+
+    [Parameter] public string SearchTerm { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var allTrails = await Http.GetFromJsonAsync<IEnumerable<Trail>>("trails/trail-data.json");
+            _searchResults = allTrails.Where(_ => _.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase)
+                                               || _.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
+            _cachedSearchResults = _searchResults;
+            NavManager.LocationChanged += HandleLocationChanged;
+            UpdateFilters();
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"There was a problem loading trail data: {ex.Message}");
+        }
+    }
+
+    private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
+    {
+        UpdateFilters();
+    }
+
+    private void UpdateFilters()
+    {
+        var filters = new List<Func<Trail, bool>>();
+        NavManager.TryGetQueryString<int>("maxlength", out var maxLength);
+        NavManager.TryGetQueryString<int>("maxtime", out var maxTime);
+
+        if (maxLength > 0)
+        {
+            filters.Add(_ => _.Length <= maxLength);
+        }
+
+        if (maxTime > 0)
+        {
+            filters.Add(_ => _.TimeInMinutes <= maxTime * 60);
+        }
+
+        if (filters.Any())
+        {
+            _searchResults = _cachedSearchResults.Where(trail => filters.All(filter => filter(trail)));
+        }
+        else
+        {
+            _searchResults = _cachedSearchResults;
+        }
+
+        StateHasChanged();
+    }
+
+    public void Dispose() => NavManager.LocationChanged -= HandleLocationChanged;
+
+    private void HandleTrailSelected(Trail trail) => _selectedTrail = trail;
+}

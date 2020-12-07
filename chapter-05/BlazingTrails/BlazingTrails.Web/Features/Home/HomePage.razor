@@ -1,0 +1,45 @@
+﻿@page "/"
+@inject HttpClient Http
+
+@if (_trails == null)
+{
+    <p>Loading trails...</p>
+}
+else
+{
+    <TrailDetails Trail="_selectedTrail" />
+
+    <TrailSearch />
+
+    <div class="grid">
+        @foreach (var trail in _trails)
+        {
+            <TrailCard Trail="trail" OnSelected="HandleTrailSelected" />
+        }
+    </div>
+}
+
+@code {
+    private IEnumerable<Trail> _trails;
+    private Trail? _selectedTrail;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Console.WriteLine("Before API call");
+            var response = await Http.GetFromJsonAsync<GetTrailsRequest.Response>(GetTrailsRequest.RouteTemplate);
+            Console.WriteLine(response.Trails.Count());
+            _trails = response.Trails.Select(_ => new Trail { Id = _.Id, Name = _.Name, Location=_.Location, Length=_.Length, Description=_.Description,TimeInMinutes=_.TimeInMinutes,Route=_.RouteInstructions.Select(_ => new RouteInstruction { Stage = _.Stage, Description = _.Description }).ToList() });
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"There was a problem loading trail data: {ex.Message}");
+        }
+    }
+
+    private void HandleTrailSelected(Trail trail)
+    {
+        _selectedTrail = trail;
+    }
+}
