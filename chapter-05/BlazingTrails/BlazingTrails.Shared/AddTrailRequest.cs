@@ -14,7 +14,7 @@ namespace BlazingTrails.Shared
         public int TimeInMinutes { get; set; }
         public int Length { get; set; }
         public bool IsFavourite { get; set; }
-        public List<RouteInstruction> Route { get; set; }
+        public List<RouteInstruction> Route { get; set; } = new List<RouteInstruction>();
 
         public class RouteInstruction
         {

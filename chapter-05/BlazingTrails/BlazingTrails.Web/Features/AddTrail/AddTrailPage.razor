@@ -1,5 +1,6 @@
 ﻿@page "/add-trail"
 @using System.IO;
+@inject HttpClient HttpClient
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -10,7 +11,17 @@
 
 <h3 class="mt-5 mb-4">Add a trail</h3>
 
-<EditForm Model="_trail">
+@if (submitSuccessful)
+{
+<div class="alert alert-success" role="alert">
+    <svg width="1.25em" height="1.25em" viewBox="0 0 16 16" class="bi bi-check-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+    </svg>
+    Your trail has been submitted successfully!
+</div>
+}
+
+<EditForm Model="_trail" OnValidSubmit="SubmitForm">
     <FluentValidationValidator />
 
     <div class="card bg-light">
@@ -56,7 +67,8 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="trailImage" class="font-weight-bold text-secondary">Image</label>
-                                <InputFile OnChange="LoadTrailImage" class="form-control-file" id="trailImage" />
+                                <InputFile OnChange="LoadTrailImage" class="form-control-file" id="trailImage" accept=".png,.jpg,.jpeg" />
+                                @* TODO: Only accept images *@
                             </div>
                         </div>
                     </div>
@@ -107,22 +119,30 @@
                 </div>
 
                 <div class="col-8">
+                    @{var i = 0;}
                     @foreach (var routeInstruction in _trail.Route)
                     {
+                        i++;
+                        routeInstruction.Stage = i;
                         <div class="row">
                             <div class="col-2">
                                 <div class="form-group">
                                     <label for="routeInstructionStage" class="font-weight-bold text-secondary">Stage</label>
-                                    <InputNumber @bind-Value="routeInstruction.Stage" class="form-control" id="routeInstructionStage" />
-                                    <ValidationMessage For="@(() => routeInstruction.Stage)" />
+                                    <p>@routeInstruction.Stage</p>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
                                     <label for="routeInstructionDescription" class="font-weight-bold text-secondary">Description</label>
                                     <InputText @bind-Value="routeInstruction.Description" class="form-control" id="routeInstructionDescription" />
-                                    <ValidationMessage For="@(() => routeInstruction.Description)" />
                                 </div>
+                            </div>
+                            <div class="col-1 remove-trail-instruction">
+                                <button @onclick="@(() => RemoveRouteInstruction(routeInstruction))" class="btn btn-link" type="button">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle-fill text-danger" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                     }
@@ -151,16 +171,16 @@
 
 @code {
     AddTrailRequest _trail = new AddTrailRequest();
-
-    protected override void OnInitialized()
-    {
-        //_trail.Route = new List<RouteInstruction>();
-        //_trail.Route.Add(new RouteInstruction());
-    }
+    bool submitSuccessful;
 
     private void AddRouteInstruction()
     {
-        //_trail.Route.Add(new RouteInstruction());
+        _trail.Route.Add(new AddTrailRequest.RouteInstruction());
+    }
+
+    private void RemoveRouteInstruction(AddTrailRequest.RouteInstruction routeInstruction)
+    {
+        _trail.Route.Remove(routeInstruction);
     }
 
     private async Task LoadTrailImage(InputFileChangeEventArgs e)
@@ -173,5 +193,16 @@
         await fileStream.CopyToAsync(memoryStream);
 
         _trail.Image = $"data:{format};base64,{Convert.ToBase64String(memoryStream.ToArray())}";
+    }
+
+    private async Task SubmitForm()
+    {
+        var response = await HttpClient.PostAsJsonAsync(AddTrailRequest.RouteTemplate, _trail);
+
+        if (response.IsSuccessStatusCode)
+        {
+            _trail = new AddTrailRequest();
+            submitSuccessful = true;
+        }
     }
 }

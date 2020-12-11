@@ -50,6 +50,7 @@ namespace BlazingTrails.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapRazorPages();
                 endpoints.MapFallbackToFile("index.html");
             });
         }
