@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Git\ChrisSainty\blazor-in-action\chapter-05\BlazingTrails" t="IncludeFlat">
+      <e p="BlazingTrails.Api" t="IncludeRecursive">
+        <e p="appsettings.Development.json" t="Include" />
+        <e p="appsettings.json" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="BlazingTrails.Api.csproj" t="IncludeRecursive" />
+        <e p="Endpoints" t="Include">
+          <e p="AddTrailEndpoint.cs" t="Include" />
+          <e p="GetTrailsEndpoint.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="net5.0" t="Include">
+              <e p="BlazingTrails.Api.AssemblyInfo.cs" t="Include" />
+              <e p="BlazingTrails.Api.RazorAssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Pages" t="Include">
+          <e p="Error.cshtml" t="Include" />
+          <e p="Error.cshtml.cs" t="Include" />
+        </e>
+        <e p="Persistance" t="Include">
+          <e p="BlazingTrailsContext.cs" t="Include" />
+          <e p="Config" t="Include">
+            <e p="RouteInstructionConfig.cs" t="Include" />
+            <e p="TrailConfig.cs" t="Include" />
+          </e>
+          <e p="Data" t="Include">
+            <e p="blazingtrails.db" t="Include" />
+            <e p="Migrations" t="Include">
+              <e p="20201208075109_Initial.cs" t="Include" />
+              <e p="20201208075109_Initial.Designer.cs" t="Include" />
+              <e p="BlazingTrailsContextModelSnapshot.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Entities" t="Include">
+            <e p="RouteInstruction.cs" t="Include" />
+            <e p="Trail.cs" t="Include" />
+          </e>
+          <e p="SeedData.cs" t="Include" />
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+        </e>
+        <e p="Startup.cs" t="Include" />
+      </e>
+      <e p="BlazingTrails.Shared" t="IncludeRecursive">
+        <e p="AddTrailRequest.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="BlazingTrails.Shared.csproj" t="IncludeRecursive" />
+        <e p="GetTrailsRequest.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="net5.0" t="Include">
+              <e p="BlazingTrails.Shared.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="BlazingTrails.sln" t="IncludeFlat" />
+      <e p="BlazingTrails.Web" t="IncludeRecursive">
+        <e p="_Imports.razor" t="Include" />
+        <e p="App.razor" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="BlazingTrails.Web.csproj" t="IncludeRecursive" />
+        <e p="Extensions" t="Include">
+          <e p="NavigationManagerExtensions.cs" t="Include" />
+        </e>
+        <e p="Features" t="Include">
+          <e p="AddTrail" t="Include">
+            <e p="AddTrailPage.razor" t="Include" />
+            <e p="AddTrailPage.razor.css" t="Include" />
+            <e p="AddTrailPage.razor.css.map" t="Include" />
+            <e p="AddTrailPage.razor.scss" t="Include" />
+            <e p="InputTime.razor" t="Include" />
+            <e p="InputTime.razor.css" t="Include" />
+            <e p="InputTime.razor.css.map" t="Include" />
+            <e p="InputTime.razor.scss" t="Include" />
+          </e>
+          <e p="Home" t="Include">
+            <e p="HomePage.razor" t="Include" />
+            <e p="HomePage.razor.css" t="Include" />
+            <e p="HomePage.razor.css.map" t="Include" />
+            <e p="HomePage.razor.scss" t="Include" />
+            <e p="Search" t="Include">
+              <e p="SearchFilter.razor" t="Include" />
+              <e p="SearchFilter.razor.css" t="Include" />
+              <e p="SearchFilter.razor.css.map" t="Include" />
+              <e p="SearchFilter.razor.scss" t="Include" />
+              <e p="SearchPage.razor" t="Include" />
+            </e>
+            <e p="TrailCard.razor" t="Include" />
+            <e p="TrailDetails.razor" t="Include" />
+            <e p="TrailDetails.razor.css" t="Include" />
+            <e p="TrailDetails.razor.css.map" t="Include" />
+            <e p="TrailDetails.razor.scss" t="Include" />
+            <e p="TrailSearch.razor" t="Include" />
+          </e>
+          <e p="Layout" t="Include">
+            <e p="Header.razor" t="Include" />
+            <e p="MainLayout.razor" t="Include" />
+          </e>
+          <e p="Shared" t="Include">
+            <e p="Trail.cs" t="Include" />
+          </e>
+        </e>
+        <e p="node_modules\sass" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="net5.0" t="Include">
+              <e p="BlazingTrails.Web.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="package-lock.json" t="Include" />
+        <e p="package.json" t="Include" />
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+        </e>
+        <e p="wwwroot" t="Include">
+          <e p="css" t="Include">
+            <e p="app.css" t="Include" />
+            <e p="bootstrap" t="Include">
+              <e p="bootstrap.min.css" t="Include" />
+              <e p="bootstrap.min.css.gz" t="Include" />
+              <e p="bootstrap.min.css.map" t="Include" />
+            </e>
+            <e p="open-iconic" t="Include">
+              <e p="font" t="Include">
+                <e p="css" t="Include">
+                  <e p="open-iconic-bootstrap.min.css" t="Include" />
+                  <e p="open-iconic-bootstrap.min.css.gz" t="Include" />
+                </e>
+                <e p="fonts" t="Include">
+                  <e p="open-iconic.eot" t="Include" />
+                  <e p="open-iconic.otf" t="Include" />
+                  <e p="open-iconic.svg" t="Include" />
+                  <e p="open-iconic.ttf" t="Include" />
+                  <e p="open-iconic.woff" t="Include" />
+                </e>
+              </e>
+              <e p="FONT-LICENSE" t="Include" />
+              <e p="ICON-LICENSE" t="Include" />
+              <e p="README.md" t="Include" />
+            </e>
+          </e>
+          <e p="favicon.ico" t="Include" />
+          <e p="index.html" t="Include" />
+          <e p="trails" t="Include">
+            <e p="1.jpg" t="Include" />
+            <e p="2.jpg" t="Include" />
+            <e p="3.jpg" t="Include" />
+            <e p="4.jpg" t="Include" />
+            <e p="5.jpg" t="Include" />
+            <e p="6.jpg" t="Include" />
+            <e p="7.jpg" t="Include" />
+            <e p="8.jpg" t="Include" />
+            <e p="9.jpg" t="Include" />
+            <e p="trail-data.json" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+    <e p="C:\Users\Chris\AppData\Local\JetBrains\Rider2020.3\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Chris\AppData\Local\JetBrains\Rider2020.3\resharper-host\Local\Transient\Rider\v203\SolutionCaches\_BlazingTrails.-384864696.00" t="ExcludeRecursive" />
+  </component>
+</project>

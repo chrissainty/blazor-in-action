@@ -1,4 +1,6 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Components.Forms;
+using System;
 using System.Collections.Generic;
 
 namespace BlazingTrails.Shared
@@ -9,7 +11,6 @@ namespace BlazingTrails.Shared
 
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Image { get; set; }
         public string Location { get; set; }
         public int TimeInMinutes { get; set; }
         public int Length { get; set; }
@@ -23,9 +24,9 @@ namespace BlazingTrails.Shared
         }
     }
 
-    public class TrailValidator : AbstractValidator<AddTrailRequest>
+    public class AddTrailRequestValidator : AbstractValidator<AddTrailRequest>
     {
-        public TrailValidator()
+        public AddTrailRequestValidator()
         {
             RuleFor(_ => _.Name).NotEmpty().WithMessage("Please enter a name");
             RuleFor(_ => _.Description).NotEmpty().WithMessage("Please enter a description");

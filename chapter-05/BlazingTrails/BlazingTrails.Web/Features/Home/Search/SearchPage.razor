@@ -44,9 +44,19 @@ else
     {
         try
         {
-            var allTrails = await Http.GetFromJsonAsync<IEnumerable<Trail>>("trails/trail-data.json");
-            _searchResults = allTrails.Where(_ => _.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase)
-                                               || _.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
+            var response = await Http.GetFromJsonAsync<GetTrailsRequest.Response>(GetTrailsRequest.RouteTemplate);
+            _searchResults = response.Trails.Where(_ => _.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase)
+                                                || _.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase))
+                                            .Select(_ => new Trail
+                                            {
+                                                Id = _.Id,
+                                                Name = _.Name,
+                                                Description = _.Description,
+                                                Image = _.Image,
+                                                Length = _.Length,
+                                                Location = _.Location,
+                                                TimeInMinutes = _.TimeInMinutes
+                                            });
             _cachedSearchResults = _searchResults;
             NavManager.LocationChanged += HandleLocationChanged;
             UpdateFilters();

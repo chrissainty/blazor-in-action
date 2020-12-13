@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BlazingTrails.Api.Endpoints
 {
-    public class AddTrailEndpoint : BaseAsyncEndpoint<AddTrailRequest, bool>
+    public class AddTrailEndpoint : BaseAsyncEndpoint<AddTrailRequest, int>
     {
         private readonly BlazingTrailsContext _database;
 
@@ -19,15 +19,13 @@ namespace BlazingTrails.Api.Endpoints
         }
 
         [HttpPost(AddTrailRequest.RouteTemplate)]
-        public override async Task<ActionResult<bool>> HandleAsync(AddTrailRequest request, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<int>> HandleAsync(AddTrailRequest request, CancellationToken cancellationToken = default)
         {
-            // TODO: Check for image type?
-
             var trail = new Trail
             {
                 Name = request.Name,
                 Description = request.Description,
-                Image = request.Image,
+                Image = "",
                 Location = request.Location,
                 TimeInMinutes = request.TimeInMinutes,
                 Length = request.Length,
@@ -47,7 +45,7 @@ namespace BlazingTrails.Api.Endpoints
 
             await _database.SaveChangesAsync(cancellationToken);
 
-            return Ok(true);
+            return Ok(trail.Id);
         }
     }
 }

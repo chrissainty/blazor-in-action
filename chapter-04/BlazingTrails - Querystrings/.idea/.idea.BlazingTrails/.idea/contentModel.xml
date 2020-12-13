@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Git\ChrisSainty\blazor-in-action\chapter-04\BlazingTrails - Querystrings" t="IncludeFlat">
+      <e p="BlazingTrails.sln" t="IncludeFlat" />
+      <e p="BlazingTrails.Web" t="IncludeRecursive">
+        <e p="_Imports.razor" t="Include" />
+        <e p="App.razor" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="BlazingTrails.Web.csproj" t="IncludeRecursive" />
+        <e p="Extensions" t="Include">
+          <e p="NavigationManagerExtensions.cs" t="Include" />
+        </e>
+        <e p="Features" t="Include">
+          <e p="Home" t="Include">
+            <e p="HomePage.razor" t="Include" />
+            <e p="SearchFilter.razor" t="Include" />
+            <e p="SearchFilter.razor.css" t="Include" />
+            <e p="SearchFilter.razor.css.map" t="Include" />
+            <e p="SearchFilter.razor.scss" t="Include" />
+            <e p="SearchPage.razor" t="Include" />
+            <e p="Trail.cs" t="Include" />
+            <e p="TrailCard.razor" t="Include" />
+            <e p="TrailDetails.razor" t="Include" />
+            <e p="TrailDetails.razor.css" t="Include" />
+            <e p="TrailDetails.razor.css.map" t="Include" />
+            <e p="TrailDetails.razor.scss" t="Include" />
+            <e p="TrailSearch.razor" t="Include" />
+          </e>
+          <e p="Layout" t="Include">
+            <e p="Header.razor" t="Include" />
+            <e p="MainLayout.razor" t="Include" />
+          </e>
+        </e>
+        <e p="node_modules\sass" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="net5.0" t="Include">
+              <e p="BlazingTrails.Web.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="package-lock.json" t="Include" />
+        <e p="package.json" t="Include" />
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+        </e>
+        <e p="wwwroot" t="Include">
+          <e p="css" t="Include">
+            <e p="app.css" t="Include" />
+            <e p="bootstrap" t="Include">
+              <e p="bootstrap.min.css" t="Include" />
+              <e p="bootstrap.min.css.gz" t="Include" />
+              <e p="bootstrap.min.css.map" t="Include" />
+            </e>
+            <e p="open-iconic" t="Include">
+              <e p="font" t="Include">
+                <e p="css" t="Include">
+                  <e p="open-iconic-bootstrap.min.css" t="Include" />
+                  <e p="open-iconic-bootstrap.min.css.gz" t="Include" />
+                </e>
+                <e p="fonts" t="Include">
+                  <e p="open-iconic.eot" t="Include" />
+                  <e p="open-iconic.otf" t="Include" />
+                  <e p="open-iconic.svg" t="Include" />
+                  <e p="open-iconic.ttf" t="Include" />
+                  <e p="open-iconic.woff" t="Include" />
+                </e>
+              </e>
+              <e p="FONT-LICENSE" t="Include" />
+              <e p="ICON-LICENSE" t="Include" />
+              <e p="README.md" t="Include" />
+            </e>
+          </e>
+          <e p="favicon.ico" t="Include" />
+          <e p="index.html" t="Include" />
+          <e p="trails" t="Include">
+            <e p="1.jpg" t="Include" />
+            <e p="2.jpg" t="Include" />
+            <e p="3.jpg" t="Include" />
+            <e p="4.jpg" t="Include" />
+            <e p="5.jpg" t="Include" />
+            <e p="6.jpg" t="Include" />
+            <e p="7.jpg" t="Include" />
+            <e p="8.jpg" t="Include" />
+            <e p="9.jpg" t="Include" />
+            <e p="trail-data.json" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+    <e p="C:\Users\Chris\AppData\Local\JetBrains\Rider2020.3\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Chris\AppData\Local\JetBrains\Rider2020.3\resharper-host\Local\Transient\Rider\v203\SolutionCaches\_BlazingTrails.795159828.00" t="ExcludeRecursive" />
+  </component>
+</project>
