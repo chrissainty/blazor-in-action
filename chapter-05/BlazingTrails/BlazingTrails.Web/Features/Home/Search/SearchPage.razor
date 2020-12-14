@@ -36,7 +36,6 @@ else
     private IEnumerable<Trail> _searchResults;
     private IEnumerable<Trail> _cachedSearchResults;
     private Trail? _selectedTrail;
-    private string _searchTerm;
 
     [Parameter] public string SearchTerm { get; set; }
 
@@ -44,20 +43,7 @@ else
     {
         try
         {
-            var response = await Http.GetFromJsonAsync<GetTrailsRequest.Response>(GetTrailsRequest.RouteTemplate);
-            _searchResults = response.Trails.Where(_ => _.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase)
-                                                || _.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase))
-                                            .Select(_ => new Trail
-                                            {
-                                                Id = _.Id,
-                                                Name = _.Name,
-                                                Description = _.Description,
-                                                Image = _.Image,
-                                                Length = _.Length,
-                                                Location = _.Location,
-                                                TimeInMinutes = _.TimeInMinutes
-                                            });
-            _cachedSearchResults = _searchResults;
+            await GetSearchResults();
             NavManager.LocationChanged += HandleLocationChanged;
             UpdateFilters();
         }
@@ -65,6 +51,25 @@ else
         {
             Console.WriteLine($"There was a problem loading trail data: {ex.Message}");
         }
+    }
+
+    private async Task GetSearchResults()
+    {
+        var response = await Http.GetFromJsonAsync<GetTrailsRequest.Response>(GetTrailsRequest.RouteTemplate);
+        _searchResults = response.Trails.Where(_ => _.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase)
+                                                    || _.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase))
+            .Select(_ => new Trail
+            {
+                Id = _.Id,
+                Name = _.Name,
+                Description = _.Description,
+                Image = _.Image,
+                Length = _.Length,
+                Location = _.Location,
+                TimeInMinutes = _.TimeInMinutes
+            });
+        
+        _cachedSearchResults = _searchResults;
     }
 
     private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
