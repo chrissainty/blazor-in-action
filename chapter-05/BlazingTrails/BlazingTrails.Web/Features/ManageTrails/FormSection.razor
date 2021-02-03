@@ -1,0 +1,20 @@
+﻿<div class="card bg-light mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-4">
+                <h4>@Title</h4>
+                <p class="text-secondary">@HelpText</p>
+            </div>
+
+            <div class="col-8">
+                @ChildContent
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; }
+    [Parameter] public string HelpText { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+}

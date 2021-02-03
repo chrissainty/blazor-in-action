@@ -1,14 +1,11 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Components.Forms;
-using System;
 using System.Collections.Generic;
 
-namespace BlazingTrails.Shared
+namespace BlazingTrails.Shared.Features.ManageTrails
 {
-    public class AddTrailRequest
+    public class TrailDto
     {
-        public const string RouteTemplate = "/api/trails";
-
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Location { get; set; }
@@ -24,21 +21,18 @@ namespace BlazingTrails.Shared
         }
     }
 
-    public class AddTrailRequestValidator : AbstractValidator<AddTrailRequest>
+    public class TrailValidator : AbstractValidator<TrailDto>
     {
-        public AddTrailRequestValidator()
+        public TrailValidator()
         {
             RuleFor(_ => _.Name).NotEmpty().WithMessage("Please enter a name");
             RuleFor(_ => _.Description).NotEmpty().WithMessage("Please enter a description");
             RuleFor(_ => _.Location).NotEmpty().WithMessage("Please enter a location");
-            RuleFor(_ => _.TimeInMinutes).GreaterThan(0).WithMessage("Please enter a time");
             RuleFor(_ => _.Length).GreaterThan(0).WithMessage("Please enter a length");
-            RuleFor(_ => _.Route).NotEmpty().WithMessage("Please add a route instruction");
-            RuleForEach(_ => _.Route).SetValidator(new RouteInstructionValidator());
         }
     }
 
-    public class RouteInstructionValidator : AbstractValidator<AddTrailRequest.RouteInstruction>
+    public class RouteInstructionValidator : AbstractValidator<TrailDto.RouteInstruction>
     {
         public RouteInstructionValidator()
         {
