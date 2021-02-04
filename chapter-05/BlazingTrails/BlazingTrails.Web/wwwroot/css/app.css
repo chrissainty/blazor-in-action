@@ -1,0 +1,44 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+.validation-message {
+    color: red;
+}
+
+input.invalid,
+textarea.invalid, 
+select.invalid {
+    border-color: red;
+}
+
+input.valid.modified,
+text.valid.modified,
+select.valid.modified {
+    border-color: green;
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    -webkit-box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 288px);
+    grid-column-gap: 123px;
+    grid-row-gap: 75px;
+}

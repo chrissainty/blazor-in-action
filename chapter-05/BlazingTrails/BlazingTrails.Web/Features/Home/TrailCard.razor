@@ -1,0 +1,25 @@
+﻿@inject NavigationManager NavManager
+
+<div class="card" style="width: 18rem;">
+    <img src="@Trail.Image" class="card-img-top" alt="@Trail.Name">
+    <div class="card-body">
+        <h5 class="card-title">@Trail.Name</h5>
+        <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @Trail.Location</h6>
+        <div class="d-flex justify-content-between">
+            <span><span class="oi oi-clock mr-2"></span> @Trail.TimeFormatted</span>
+            <span><span class="oi oi-infinity mr-2"></span> @Trail.Length km</span>
+        </div>
+        <button class="btn btn-primary mt-3" @onclick="@(async () => await OnSelected.InvokeAsync(Trail))">View</button>
+        <button class="btn btn-outline-secondary mt-3" @onclick="@UpdateTrail">Update</button>
+    </div>
+</div>
+
+@code {
+    [Parameter] public Trail Trail { get; set; }
+    [Parameter] public EventCallback<Trail> OnSelected { get; set; }
+
+    private void UpdateTrail()
+    {
+        NavManager.NavigateTo($"/update-trail/{Trail.Id}");
+    }
+}
