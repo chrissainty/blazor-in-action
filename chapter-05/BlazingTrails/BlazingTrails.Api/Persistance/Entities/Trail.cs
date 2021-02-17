@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Collections.Generic;
 
 namespace BlazingTrails.Api.Persistance.Entities
 {
@@ -14,5 +16,17 @@ namespace BlazingTrails.Api.Persistance.Entities
         public bool IsFavourite { get; set; }
 
         public ICollection<RouteInstruction> Route { get; set; }
+    }
+
+    public class TrailConfig : IEntityTypeConfiguration<Trail>
+    {
+        public void Configure(EntityTypeBuilder<Trail> builder)
+        {
+            builder.Property(_ => _.Name).IsRequired();
+            builder.Property(_ => _.Description).IsRequired();
+            builder.Property(_ => _.Location).IsRequired();
+            builder.Property(_ => _.TimeInMinutes).IsRequired();
+            builder.Property(_ => _.Length).IsRequired();
+        }
     }
 }
