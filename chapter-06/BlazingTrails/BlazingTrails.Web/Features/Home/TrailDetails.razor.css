@@ -1,0 +1,55 @@
+.drawer-mask {
+  visibility: hidden;
+  position: fixed;
+  overflow: hidden;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 99;
+  background-color: #000000;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.drawer-wrapper.slide .drawer-mask {
+  opacity: 0.5;
+  visibility: visible;
+}
+.drawer-wrapper.slide .drawer {
+  transform: translateX(0);
+}
+
+.drawer {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 35em;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: white;
+  border-left: 0.063em solid gray;
+  z-index: 100;
+  transform: translateX(110%);
+  transition: transform 0.3s ease, width 0.3s ease;
+}
+
+.drawer-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.trail-details {
+  padding: 20px;
+}
+
+.drawer-controls {
+  padding: 20px;
+  background-color: #ffffff;
+}
+
+/*# sourceMappingURL=TrailDetails.razor.css.map */
