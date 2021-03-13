@@ -1,11 +1,11 @@
-﻿using BlazingTrails.Shared.Features.ManageTrails;
+﻿using BlazingTrails.Shared.Features.ManageTrails.AddTrail;
 using MediatR;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BlazingTrails.Web.Features.ManageTrails
+namespace BlazingTrails.Web.Features.ManageTrails.AddTrail
 {
     public class AddTrailHandler : IRequestHandler<AddTrailRequest, AddTrailRequest.Response>
     {

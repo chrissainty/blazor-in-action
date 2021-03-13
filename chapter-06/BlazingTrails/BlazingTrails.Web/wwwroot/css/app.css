@@ -3,18 +3,6 @@
 .validation-message {
     color: red;
 }
-/*
-input.invalid,
-textarea.invalid, 
-select.invalid {
-    border-color: red;
-}*/
-
-input.is-valid.modified,
-text.is-valid.modified,
-select.is-valid.modified {
-    border-color: green;
-}
 
 #blazor-error-ui {
     background: lightyellow;

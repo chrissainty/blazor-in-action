@@ -1,0 +1,43 @@
+﻿@page "/add-trail"
+@inject IMediator Mediator
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Add Trail</li>
+    </ol>
+</nav>
+
+<h3 class="mt-5 mb-4">Add a trail</h3>
+
+<TrailForm OnAddSubmit="SubmitNewTrail" />
+
+@code {
+    private async Task<SubmitResult> SubmitNewTrail(TrailDto trail, IBrowserFile trailImage)
+    {
+        var response = await Mediator.Send(new AddTrailRequest(trail));
+        if (response.TrailId == -1)
+        {
+            return SubmitResult.Fail("There was a problem saving your trail.");
+        }
+
+        if (trail.ImageAction == ImageAction.Add)
+        {
+            return await ProcessImage(response.TrailId, trailImage);
+        }
+
+        return SubmitResult.Success();
+    }
+
+    private async Task<SubmitResult> ProcessImage(int trailId, IBrowserFile trailImage)
+    {
+        var imageUploadResponse = await Mediator.Send(new UploadTrailImageRequest(trailId, trailImage));
+
+        if (string.IsNullOrWhiteSpace(imageUploadResponse.ImageName))
+        {
+            return SubmitResult.Fail("Your trail was saved, but there was a problem uploading the image.");
+        }
+
+        return SubmitResult.Success();
+    }
+}

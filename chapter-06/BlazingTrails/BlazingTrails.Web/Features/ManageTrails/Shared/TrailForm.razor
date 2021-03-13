@@ -1,16 +1,4 @@
-﻿@page "/add-trail"
-@inject IMediator Mediator
-
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Add Trail</li>
-    </ol>
-</nav>
-
- <h3 class="mt-5 mb-4">Add a trail</h3>
-
-@if (submitSuccessful)
+﻿@if (_submitSuccessful)
 {
     <div class="alert alert-success" role="alert">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
@@ -19,18 +7,20 @@
         Your trail has been submitted successfully!
     </div>
 }
-else if (!submitSuccessful && errorMessage.Length > 0)
+else if (!_submitSuccessful && _errorMessage.Length > 0)
 {
     <div class="alert alert-danger" role="alert">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
         </svg>
-        @errorMessage
+        @_errorMessage
     </div>
 }
 
 <EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
     <FluentValidationValidator />
+
+    <ValidationSummary />
 
     <FormSection Title="Basic Details"
                  HelpText="This information is used to identify the trail and can be searched to help hikers find it.">
@@ -53,6 +43,24 @@ else if (!submitSuccessful && errorMessage.Length > 0)
             <ValidationMessage For="@(() => _trail.Location)" />
         </FormFieldSet>
 
+        <FormFieldSet Width="col-6">
+            <label for="trailImage" class="font-weight-bold text-secondary">Image</label>
+            @if (string.IsNullOrWhiteSpace(_trail.Image))
+            {
+                <InputFile OnChange="LoadTrailImage" class="form-control-file" id="trailImage" accept=".png,.jpg,.jpeg" />
+            }
+            else
+            {
+                <div class="card bg-dark text-white">
+                    <img src="images/@_trail.Image" />
+                    <div class="card-img-overlay">
+                        <button class="btn btn-primary btn-sm" @onclick="RemoveTrailImage">Remove</button>
+                    </div>
+                </div>
+            }
+        </FormFieldSet>
+
+
     </FormSection>
 
     <FormSection Title="Difficulty"
@@ -64,10 +72,16 @@ else if (!submitSuccessful && errorMessage.Length > 0)
             <ValidationMessage For="@(() => _trail.Length)" />
         </FormFieldSet>
 
+        <FormFieldSet Width="col-5">
+            <label for="trailTime" class="font-weight-bold text-secondary">Time</label>
+            <InputTime @bind-Value="_trail.TimeInMinutes" id="trailTime" />
+            <ValidationMessage For="@(() => _trail.TimeInMinutes)" />
+        </FormFieldSet>
+
     </FormSection>
 
     <FormSection Title="Route Instructions"
-                    HelpText="Route instructions are a guide for the trail. This helps hikers new to the trail stay on track.">
+                 HelpText="Route instructions are a guide for the trail. This helps hikers new to the trail stay on track.">
         @{ var i = 0; }
         @foreach (var routeInstruction in _trail.Route)
         {
@@ -117,29 +131,89 @@ else if (!submitSuccessful && errorMessage.Length > 0)
 </EditForm>
 
 @code {
-    TrailDto _trail = new TrailDto();
-    bool submitSuccessful;
-    string errorMessage = "";
-    EditContext _editContext;
+    private TrailDto _trail = new TrailDto();
+    private IBrowserFile trailImage;
+    private EditContext _editContext;
+    private bool _submitSuccessful;
+    private string _errorMessage = "";
 
-    protected override void OnInitialized()
+    [Parameter] public TrailDto Trail { get; set; }
+    [Parameter] public Func<TrailDto, IBrowserFile, Task<SubmitResult>> OnAddSubmit { get; set; }
+    [Parameter] public Func<TrailDto, IBrowserFile, Task<SubmitResult>> OnEditSubmit { get; set; }
+
+    protected override void OnParametersSet()
     {
         _editContext = new EditContext(_trail);
         _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
+
+        if (Trail != null)
+        {
+            _trail.Id = Trail.Id;
+            _trail.Name = Trail.Name;
+            _trail.Description = Trail.Description;
+            _trail.Location = Trail.Location;
+            _trail.Image = Trail.Image;
+            _trail.Length = Trail.Length;
+            _trail.TimeInMinutes = Trail.TimeInMinutes;
+
+            _trail.Route.Clear();
+            _trail.Route.AddRange(Trail.Route.Select(_ => new TrailDto.RouteInstruction
+            {
+                Stage = _.Stage,
+                Description = _.Description
+            }));
+        }
+    }
+
+    private void LoadTrailImage(InputFileChangeEventArgs e)
+    {
+        trailImage = e.File;
+        _trail.ImageAction = Trail == null ? ImageAction.Add : ImageAction.Replace;
+    }
+
+    private void RemoveTrailImage()
+    {
+        _trail.Image = "";
+        _trail.ImageAction = ImageAction.Remove;
     }
 
     private async Task SubmitForm()
     {
-        var response = await Mediator.Send(new AddTrailRequest(_trail));
-        if (response.TrailId == -1)
+        SubmitResult submitResult;
+        if (Trail == null)
         {
-            errorMessage = "There was a problem saving your trail.";
-            submitSuccessful = false;
-            return;
+            submitResult = await OnAddSubmit(_trail, trailImage);
+            if (submitResult.IsSuccess)
+            {
+                _submitSuccessful = true;
+                ResetForm();
+            }
+            else
+            {
+                _submitSuccessful = false;
+                _errorMessage = submitResult.ErrorMessage;
+            }
         }
+        else
+        {
+            submitResult = await OnEditSubmit(_trail, trailImage);
+            if (submitResult.IsSuccess)
+            {
+                _submitSuccessful = true;
+            }
+            else
+            {
+                _submitSuccessful = false;
+                _errorMessage = submitResult.ErrorMessage;
+            }
+        }
+    }
 
+    private void ResetForm()
+    {
         _trail = new TrailDto();
-        errorMessage = "";
-        submitSuccessful = true;
+        _editContext = new EditContext(_trail);
+        _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
+        trailImage = null;
     }
 }

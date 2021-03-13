@@ -1,0 +1,98 @@
+﻿@page "/edit-trail/{TrailId:int}"
+@inject IMediator Mediator
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Edit Trail</li>
+    </ol>
+</nav>
+
+@if (_isLoading)
+{
+    <p>Loading trail...</p>
+}
+else
+{
+    <h3 class="mt-5 mb-4">Edit trail: @_trail.Name</h3>
+
+
+    if (_errorMessage.Length > 0)
+    {
+        <div class="alert alert-danger" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+            </svg>
+            @_errorMessage
+        </div>
+    }
+
+    <TrailForm Trail="_trail" OnEditSubmit="SubmitEditTrail" />
+}
+
+@code {
+    private string _errorMessage = "";
+    private bool _isLoading;
+    private TrailDto _trail = new TrailDto();
+
+    [Parameter] public int TrailId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = true;
+
+        var response = await Mediator.Send(new GetTrailRequest(TrailId));
+
+        if (response.Trail is not null)
+        {
+            _trail.Id = TrailId;
+            _trail.Name = response.Trail.Name;
+            _trail.Description = response.Trail.Description;
+            _trail.Location = response.Trail.Location;
+            _trail.Image = response.Trail.Image;
+            _trail.Length = response.Trail.Length;
+            _trail.TimeInMinutes = response.Trail.TimeInMinutes;
+            _trail.Route.AddRange(response.Trail.RouteInstructions.Select(_ => new TrailDto.RouteInstruction
+            {
+                Stage = _.Stage,
+                Description = _.Description
+            }));
+        }
+        else
+        {
+            _errorMessage = "There was a problem loading the trail.";
+        }
+
+        _isLoading = false;
+    }
+
+    private async Task<SubmitResult> SubmitEditTrail(TrailDto trail, IBrowserFile trailImage)
+    {
+        var response = await Mediator.Send(new UpdateTrailRequest(trail));
+        if (!response.IsSuccess)
+        {
+            return SubmitResult.Fail("There was a problem saving your trail.");
+        }
+
+        if (trail.ImageAction == ImageAction.Replace)
+        {
+            return await ProcessImage(trail.Id, trailImage);
+        }
+
+        return SubmitResult.Success();
+    }
+
+    private async Task<SubmitResult> ProcessImage(int trailId, IBrowserFile trailImage)
+    {
+        var imageUploadResponse = await Mediator.Send(new UploadTrailImageRequest(trailId, trailImage));
+
+        if (string.IsNullOrWhiteSpace(imageUploadResponse.ImageName))
+        {
+            return SubmitResult.Fail("Your trail was saved, but there was a problem uploading the image.");
+        }
+
+        _trail.Image = imageUploadResponse.ImageName;
+        StateHasChanged();
+        return SubmitResult.Success();
+    }
+}

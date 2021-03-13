@@ -1,0 +1,53 @@
+﻿@inherits InputBase<int>
+
+<div class="input-time @CssClass">
+    <div>
+        <input class="form-control" type="number" min="0" @onchange="SetHourValue" value="@_hours" />
+        <label>Hours</label>
+    </div>
+    <div>
+        <input class="form-control" type="number" min="0" max="60" @onchange="SetMinuteValue" value="@_minutes" />
+        <label>Minutes</label>
+    </div>
+</div>
+
+@code {
+    private int _hours = 0;
+    private int _minutes = 0;
+
+    protected override void OnParametersSet()
+    {
+        if (CurrentValue > 0)
+        {
+            _hours = CurrentValue / 60;
+            _minutes = CurrentValue % 60;
+        }
+    }
+
+    protected override bool TryParseValueFromString(string value, out int result, out string validationErrorMessage)
+    {
+        if (int.TryParse(value, out result))
+        {
+            validationErrorMessage = null;
+            return true;
+        }
+
+        validationErrorMessage = "Unable to convert value to a valid integer";
+        return false;
+    }
+
+    private void SetHourValue(ChangeEventArgs args)
+    {
+        int.TryParse(args.Value.ToString(), out _hours);
+        SetCurrentValue();
+    }
+
+    private void SetMinuteValue(ChangeEventArgs args)
+    {
+        int.TryParse(args.Value.ToString(), out _minutes);
+        SetCurrentValue();
+    }
+
+    private void SetCurrentValue() => CurrentValue = (_hours * 60) + _minutes;
+}
+

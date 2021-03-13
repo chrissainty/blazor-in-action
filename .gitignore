@@ -5,6 +5,7 @@
 
 # Custom
 *.db*
+**/BlazingTrails.Api/Images/*
 
 # User-specific files
 *.rsuser

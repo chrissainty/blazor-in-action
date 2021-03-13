@@ -11,11 +11,11 @@ namespace BlazingTrails.Web.Validation
 
             if (editContext.IsModified(fieldIdentifier))
             {
-                return isValid ? "modified is-valid" : "modified is-invalid";
+                return isValid ? "is-valid" : "is-invalid";
             }
             else
             {
-                return isValid ? "is-valid" : "is-invalid";
+                return isValid ? "" : "is-invalid";
             }
         }
     }

@@ -1,13 +1,13 @@
 ﻿using Ardalis.ApiEndpoints;
 using BlazingTrails.Api.Persistance;
 using BlazingTrails.Api.Persistance.Entities;
-using BlazingTrails.Shared.Features.ManageTrails;
+using BlazingTrails.Shared.Features.ManageTrails.AddTrail;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BlazingTrails.Api.Features.ManageTrails
+namespace BlazingTrails.Api.Features.ManageTrails.AddTrail
 {
     public class AddTrailEndpoint : BaseAsyncEndpoint<AddTrailRequest, int>
     {
@@ -27,7 +27,7 @@ namespace BlazingTrails.Api.Features.ManageTrails
                 Description = request.Trail.Description,
                 Image = "",
                 Location = request.Trail.Location,
-                TimeInMinutes = 0,
+                TimeInMinutes = request.Trail.TimeInMinutes,
                 Length = request.Trail.Length,
                 IsFavourite = false
             };
