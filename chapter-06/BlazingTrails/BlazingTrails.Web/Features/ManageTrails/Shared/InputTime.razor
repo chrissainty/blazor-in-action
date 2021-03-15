@@ -2,11 +2,11 @@
 
 <div class="input-time @CssClass">
     <div>
-        <input class="form-control" type="number" min="0" @onchange="SetHourValue" value="@_hours" />
+        <input class="form-control @CssClass" type="number" min="0" @onchange="SetHourValue" value="@_hours" />
         <label>Hours</label>
     </div>
     <div>
-        <input class="form-control" type="number" min="0" max="60" @onchange="SetMinuteValue" value="@_minutes" />
+        <input class="form-control @CssClass" type="number" min="0" max="60" @onchange="SetMinuteValue" value="@_minutes" />
         <label>Minutes</label>
     </div>
 </div>

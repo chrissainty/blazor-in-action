@@ -4,16 +4,16 @@ using MediatR;
 
 namespace BlazingTrails.Shared.Features.ManageTrails.EditTrail
 {
-    public record UpdateTrailRequest(TrailDto Trail) : IRequest<UpdateTrailRequest.Response>
+    public record EditTrailRequest(TrailDto Trail) : IRequest<EditTrailRequest.Response>
     {
         public const string RouteTemplate = "/api/trails";
 
         public record Response(bool IsSuccess);
     }
 
-    public class UpdateTrailRequestValidator : AbstractValidator<UpdateTrailRequest>
+    public class EditTrailRequestValidator : AbstractValidator<EditTrailRequest>
     {
-        public UpdateTrailRequestValidator()
+        public EditTrailRequestValidator()
         {
             RuleFor(_ => _.Trail).SetValidator(new TrailValidator());
         }

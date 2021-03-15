@@ -12,17 +12,17 @@ using System.Threading.Tasks;
 
 namespace BlazingTrails.Api.Features.ManageTrails.EditTrail
 {
-    public class UpdateTrailEndpoint : BaseAsyncEndpoint<UpdateTrailRequest, bool>
+    public class EditTrailEndpoint : BaseAsyncEndpoint<EditTrailRequest, bool>
     {
         private readonly BlazingTrailsContext _database;
 
-        public UpdateTrailEndpoint(BlazingTrailsContext database)
+        public EditTrailEndpoint(BlazingTrailsContext database)
         {
             _database = database;
         }
 
-        [HttpPut(UpdateTrailRequest.RouteTemplate)]
-        public override async Task<ActionResult<bool>> HandleAsync(UpdateTrailRequest request, CancellationToken cancellationToken = default)
+        [HttpPut(EditTrailRequest.RouteTemplate)]
+        public override async Task<ActionResult<bool>> HandleAsync(EditTrailRequest request, CancellationToken cancellationToken = default)
         {
             var trail = await _database.Trails.Include(_ => _.Route).SingleOrDefaultAsync(_ => _.Id == request.Trail.Id, cancellationToken: cancellationToken);
 

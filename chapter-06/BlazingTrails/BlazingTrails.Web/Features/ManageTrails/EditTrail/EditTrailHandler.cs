@@ -7,27 +7,27 @@ using System.Threading.Tasks;
 
 namespace BlazingTrails.Web.Features.ManageTrails.EditTrail
 {
-    public class UpdateTrailHandler : IRequestHandler<UpdateTrailRequest, UpdateTrailRequest.Response>
+    public class EditTrailHandler : IRequestHandler<EditTrailRequest, EditTrailRequest.Response>
     {
         private readonly HttpClient _httpClient;
 
-        public UpdateTrailHandler(HttpClient httpClient)
+        public EditTrailHandler(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
-        public async Task<UpdateTrailRequest.Response> Handle(UpdateTrailRequest request, CancellationToken cancellationToken)
+        public async Task<EditTrailRequest.Response> Handle(EditTrailRequest request, CancellationToken cancellationToken)
         {
-            var response = await _httpClient.PutAsJsonAsync(UpdateTrailRequest.RouteTemplate, request, cancellationToken);
+            var response = await _httpClient.PutAsJsonAsync(EditTrailRequest.RouteTemplate, request, cancellationToken);
 
             if (response.IsSuccessStatusCode)
             {
                 var updatedSuccessfully = await response.Content.ReadFromJsonAsync<bool>(cancellationToken: cancellationToken);
-                return new UpdateTrailRequest.Response(updatedSuccessfully);
+                return new EditTrailRequest.Response(updatedSuccessfully);
             }
             else
             {
-                return new UpdateTrailRequest.Response(false);
+                return new EditTrailRequest.Response(false);
             }
         }
     }
