@@ -22,8 +22,7 @@ namespace BlazingTrails.Web.Features.ManageTrails.EditTrail
 
             if (response.IsSuccessStatusCode)
             {
-                var updatedSuccessfully = await response.Content.ReadFromJsonAsync<bool>(cancellationToken: cancellationToken);
-                return new EditTrailRequest.Response(updatedSuccessfully);
+                return new EditTrailRequest.Response(true);
             }
             else
             {

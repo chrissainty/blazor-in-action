@@ -14,25 +14,24 @@
 }
 else
 {
-    <h3 class="mt-5 mb-4">Edit trail: @_trail.Name</h3>
+    <h3 class="mt-5 mb-4">Editing trail: @_trail.Name</h3>
 
-
-    if (_errorMessage.Length > 0)
+    @if (_submitSuccessful)
     {
-        <div class="alert alert-danger" role="alert">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
-            </svg>
-            @_errorMessage
-        </div>
+        <SuccessAlert Message="Your trail has been edited successfully!" />
+    }
+    else if (_errorMessage.Length > 0)
+    {
+        <ErrorAlert Message="@_errorMessage" />
     }
 
-    <TrailForm Trail="_trail" OnEditSubmit="SubmitEditTrail" />
+    <TrailForm Trail="_trail" OnSubmit="SubmitEditTrail" />
 }
 
 @code {
-    private string _errorMessage = "";
     private bool _isLoading;
+    private bool _submitSuccessful;
+    private string _errorMessage = "";
     private TrailDto _trail = new TrailDto();
 
     [Parameter] public int TrailId { get; set; }
@@ -66,33 +65,45 @@ else
         _isLoading = false;
     }
 
-    private async Task<SubmitResult> SubmitEditTrail(TrailDto trail, IBrowserFile trailImage)
+    private async Task SubmitEditTrail(TrailDto trail, IBrowserFile image)
     {
-        var response = await Mediator.Send(new UpdateTrailRequest(trail));
+        var response = await Mediator.Send(new EditTrailRequest(trail));
         if (!response.IsSuccess)
         {
-            return SubmitResult.Fail("There was a problem saving your trail.");
+            _submitSuccessful = false;
+            _errorMessage = "There was a problem saving your trail.";
         }
-
-        if (trail.ImageAction == ImageAction.Replace)
+        else
         {
-            return await ProcessImage(trail.Id, trailImage);
+            switch (trail.ImageAction)
+            {
+                case ImageAction.Add:
+                    _submitSuccessful = await ProcessImage(trail.Id, image);
+                    break;
+                case ImageAction.Remove:
+                    _trail.Image = "";
+                    _submitSuccessful = true;
+                    break;
+                case ImageAction.None:
+                    _submitSuccessful = true;
+                    break;
+            }
         }
 
-        return SubmitResult.Success();
+        StateHasChanged();
     }
 
-    private async Task<SubmitResult> ProcessImage(int trailId, IBrowserFile trailImage)
+    private async Task<bool> ProcessImage(int trailId, IBrowserFile trailImage)
     {
         var imageUploadResponse = await Mediator.Send(new UploadTrailImageRequest(trailId, trailImage));
 
         if (string.IsNullOrWhiteSpace(imageUploadResponse.ImageName))
         {
-            return SubmitResult.Fail("Your trail was saved, but there was a problem uploading the image.");
+            _errorMessage = "Your trail was saved, but there was a problem uploading the image.";
+            return false;
         }
 
         _trail.Image = imageUploadResponse.ImageName;
-        StateHasChanged();
-        return SubmitResult.Success();
+        return true;
     }
 }

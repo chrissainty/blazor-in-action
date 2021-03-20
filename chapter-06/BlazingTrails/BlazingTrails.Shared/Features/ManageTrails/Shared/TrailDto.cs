@@ -26,7 +26,6 @@ namespace BlazingTrails.Shared.Features.ManageTrails.Shared
     {
         None,
         Add,
-        Replace,
         Remove
     }
 

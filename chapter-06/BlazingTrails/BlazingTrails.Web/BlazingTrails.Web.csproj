@@ -20,10 +20,6 @@
 		<ScopedScssFiles Include="Features/*/*.razor.scss" />
 	</ItemGroup>
 
-	<!--<ItemGroup>
-	  <ScopedScssFiles Remove="Features\ManageTrails\InputTime.razor.scss" />
-	</ItemGroup>-->
-
 	<ItemGroup>
 	  <ProjectReference Include="..\BlazingTrails.Shared\BlazingTrails.Shared.csproj" />
 	</ItemGroup>

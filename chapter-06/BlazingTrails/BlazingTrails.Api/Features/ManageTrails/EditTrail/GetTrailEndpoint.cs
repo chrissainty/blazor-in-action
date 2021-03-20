@@ -29,13 +29,13 @@ namespace BlazingTrails.Api.Features.ManageTrails.EditTrail
             }
 
             var response = new GetTrailRequest.Response(new GetTrailRequest.Trail(trail.Id,
-                                                                                    trail.Name,
-                                                                                    trail.Location,
-                                                                                    trail.Image,
-                                                                                    trail.TimeInMinutes,
-                                                                                    trail.Length,
-                                                                                    trail.Description,
-                                                                                    trail.Route.Select(_ => new GetTrailRequest.RouteInstruction(_.Id, _.Stage, _.Description))));
+                trail.Name,
+                trail.Location,
+                trail.Image,
+                trail.TimeInMinutes,
+                trail.Length,
+                trail.Description,
+                trail.Route.Select(_ => new GetTrailRequest.RouteInstruction(_.Id, _.Stage, _.Description))));
 
             return Ok(response);
         }

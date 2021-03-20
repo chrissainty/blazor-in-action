@@ -10,34 +10,61 @@
 
 <h3 class="mt-5 mb-4">Add a trail</h3>
 
-<TrailForm OnAddSubmit="SubmitNewTrail" />
+@if (_submitSuccessful)
+{
+    <SuccessAlert Message="Your trail has been added successfully!" />
+}
+else if (_errorMessage.Length > 0)
+{
+    <ErrorAlert Message="@_errorMessage" />
+}
+
+<TrailForm @ref="_trailForm" OnSubmit="SubmitNewTrail" />
 
 @code {
-    private async Task<SubmitResult> SubmitNewTrail(TrailDto trail, IBrowserFile trailImage)
+    private bool _submitSuccessful;
+    private string _errorMessage = "";
+    private TrailForm _trailForm;
+
+    private async Task SubmitNewTrail(TrailDto trail, IBrowserFile image)
     {
         var response = await Mediator.Send(new AddTrailRequest(trail));
         if (response.TrailId == -1)
         {
-            return SubmitResult.Fail("There was a problem saving your trail.");
+            _submitSuccessful = false;
+            _errorMessage = "There was a problem saving your trail.";
+            StateHasChanged();
+            return;
         }
 
-        if (trail.ImageAction == ImageAction.Add)
+        if (image is null)
         {
-            return await ProcessImage(response.TrailId, trailImage);
+            _submitSuccessful = true;
+            _trailForm.ResetForm();
+            StateHasChanged();
+            return;
         }
 
-        return SubmitResult.Success();
+        _submitSuccessful = await ProcessImage(response.TrailId, image);
+
+        if (_submitSuccessful)
+        {
+            _trailForm.ResetForm();
+        }
+
+        StateHasChanged();
     }
 
-    private async Task<SubmitResult> ProcessImage(int trailId, IBrowserFile trailImage)
+    private async Task<bool> ProcessImage(int trailId, IBrowserFile trailImage)
     {
         var imageUploadResponse = await Mediator.Send(new UploadTrailImageRequest(trailId, trailImage));
 
         if (string.IsNullOrWhiteSpace(imageUploadResponse.ImageName))
         {
-            return SubmitResult.Fail("Your trail was saved, but there was a problem uploading the image.");
+            _errorMessage = "Your trail was saved, but there was a problem uploading the image.";
+            return false;
         }
 
-        return SubmitResult.Success();
+        return true;
     }
 }
