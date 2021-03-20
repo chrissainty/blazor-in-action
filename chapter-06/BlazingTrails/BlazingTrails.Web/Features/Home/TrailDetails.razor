@@ -1,0 +1,36 @@
+﻿<div class="drawer-wrapper @(_isOpen ? "slide" : "")">
+    <div class="drawer-mask"></div>
+    <div class="drawer">
+        <div class="drawer-content">
+            <div class="trail-image">
+                <img src="@Trail?.Image" />
+            </div>
+            <div class="trail-details">
+                <h3>@Trail?.Name</h3>
+                <h6 class="mb-3 text-muted"><span class="oi oi-map-marker"></span> @Trail?.Location</h6>
+                <div class="mt-4">
+                    <span class="mr-5"><span class="oi oi-clock mr-2"></span> @Trail?.TimeFormatted</span>
+                    <span><span class="oi oi-infinity mr-2"></span> @Trail?.Length km</span>
+                </div>
+                <p class="mt-4">@Trail?.Description</p>
+            </div>
+        </div>
+        <div class="drawer-controls">
+            <button class="btn btn-secondary" @onclick="@(() => _isOpen = false)">Close</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool _isOpen;
+
+    [Parameter] public Trail? Trail { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (Trail != null)
+        {
+            _isOpen = true;
+        }
+    }
+}
