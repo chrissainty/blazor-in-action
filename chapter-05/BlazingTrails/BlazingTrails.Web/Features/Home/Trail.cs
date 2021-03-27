@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace BlazingTrails.Web.Features.Shared
+namespace BlazingTrails.Web.Features.Home
 {
     public class Trail
     {
