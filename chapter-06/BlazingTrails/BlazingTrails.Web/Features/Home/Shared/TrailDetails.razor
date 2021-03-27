@@ -3,7 +3,7 @@
     <div class="drawer">
         <div class="drawer-content">
             <div class="trail-image">
-                <img src="@Trail?.Image" />
+                <img src="@(!string.IsNullOrWhiteSpace(Trail?.Image) ? $"images/{Trail?.Image}" : "https://via.placeholder.com/640x426.jpg?text=No+Image+For+Trail")" />
             </div>
             <div class="trail-details">
                 <h3>@Trail?.Name</h3>
