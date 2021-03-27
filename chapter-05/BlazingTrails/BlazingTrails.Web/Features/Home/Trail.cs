@@ -1,7 +1,4 @@
-﻿using FluentValidation;
-using System.Collections.Generic;
-
-namespace BlazingTrails.Web.Features.Home
+﻿namespace BlazingTrails.Web.Features.Home
 {
     public class Trail
     {
