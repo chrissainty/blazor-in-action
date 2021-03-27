@@ -10,7 +10,6 @@
             <span><span class="oi oi-infinity mr-2"></span> @Trail.Length km</span>
         </div>
         <button class="btn btn-primary mt-3" @onclick="@(async () => await OnSelected.InvokeAsync(Trail))">View</button>
-        <button class="btn btn-outline-secondary mt-3" @onclick="@UpdateTrail">Update</button>
     </div>
 </div>
 
