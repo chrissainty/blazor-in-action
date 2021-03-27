@@ -1,23 +1,35 @@
 ﻿using FluentValidation;
-using System;
 using System.Collections.Generic;
 
-namespace BlazingTrails.Web.Features.Shared
+namespace BlazingTrails.Shared.Features.ManageTrails.Shared
 {
-    public class Trail
+    public class TrailDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Image { get; set; }
         public string Location { get; set; }
+        public string Image { get; set; }
+        public ImageAction ImageAction { get; set; }
         public int TimeInMinutes { get; set; }
-        public string TimeFormatted => $"{TimeInMinutes / 60}h {TimeInMinutes % 60}m";
         public int Length { get; set; }
-        public List<RouteInstruction> Route { get; set; }
+        public List<RouteInstruction> Route { get; set; } = new List<RouteInstruction>();
+
+        public class RouteInstruction
+        {
+            public int Stage { get; set; }
+            public string Description { get; set; }
+        }
     }
 
-    public class TrailValidator : AbstractValidator<Trail>
+    public enum ImageAction
+    {
+        None,
+        Add,
+        Remove
+    }
+
+    public class TrailValidator : AbstractValidator<TrailDto>
     {
         public TrailValidator()
         {
@@ -31,14 +43,7 @@ namespace BlazingTrails.Web.Features.Shared
         }
     }
 
-
-    public class RouteInstruction
-    {
-        public int Stage { get; set; }
-        public string Description { get; set; }
-    }
-
-    public class RouteInstructionValidator : AbstractValidator<RouteInstruction>
+    public class RouteInstructionValidator : AbstractValidator<TrailDto.RouteInstruction>
     {
         public RouteInstructionValidator()
         {

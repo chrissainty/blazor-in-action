@@ -1,0 +1,61 @@
+﻿@inject NavigationManager NavManager
+
+<div class="filters">
+    <label for="maxLength">Max Length</label>
+    <input id="maxLength"
+           type="number"
+           class="form-control"
+           @bind="_maxLength" />
+    <label for="maxTime">Max Time (hours)</label>
+    <input id="maxTime"
+           type="number"
+           class="form-control"
+           @bind="_maxTime" />
+    <button class="btn btn-outline-primary"
+            @onclick="FilterSearchResults">
+        Filter
+    </button>
+    <button class="btn btn-outline-secondary"
+            @onclick="ClearSearchFilter">
+        Clear
+    </button>
+</div>
+
+@code {
+    private int _maxLength;
+    private int _maxTime;
+
+    [Parameter] public string SearchTerm { get; set; }
+
+    protected override void OnInitialized()
+    {
+        NavManager.TryGetQueryString<int>("maxlength", out _maxLength);
+        NavManager.TryGetQueryString<int>("maxtime", out _maxTime);
+    }
+
+    private void FilterSearchResults()
+    {
+        var queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
+
+        if (_maxLength > 0)
+            queryString.Add("maxlength", _maxLength.ToString());
+
+        if (_maxTime > 0)
+            queryString.Add("maxtime", _maxTime.ToString());
+
+        if (string.IsNullOrWhiteSpace(queryString.ToString()))
+        {
+            return;
+        }
+
+        NavManager.NavigateTo($"/search/{SearchTerm}?{queryString.ToString()}");
+    }
+
+    private void ClearSearchFilter()
+    {
+        _maxLength = 0;
+        _maxTime = 0;
+
+        NavManager.NavigateTo($"/search/{SearchTerm}");
+    }
+}

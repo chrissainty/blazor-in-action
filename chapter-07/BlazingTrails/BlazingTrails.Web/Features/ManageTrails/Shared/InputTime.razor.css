@@ -1,0 +1,18 @@
+.input-time {
+  display: flex;
+  flex-direction: row;
+}
+.input-time div {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+.input-time div input {
+  width: 90px;
+  margin-right: 10px;
+}
+.input-time div label {
+  margin-bottom: 0;
+}
+
+/*# sourceMappingURL=InputTime.razor.css.map */
