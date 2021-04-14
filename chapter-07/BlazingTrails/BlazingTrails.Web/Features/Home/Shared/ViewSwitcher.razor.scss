@@ -1,0 +1,8 @@
+﻿::deep th, ::deep td {
+    vertical-align: middle;
+}
+
+::deep thead tr th {
+    border-bottom: 4px solid var(--brand);
+    border-top: none;
+}
