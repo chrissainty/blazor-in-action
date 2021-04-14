@@ -24,17 +24,8 @@
         }
     }
 
-    protected override bool TryParseValueFromString(string value, out int result, out string validationErrorMessage)
-    {
-        if (int.TryParse(value, out result))
-        {
-            validationErrorMessage = null;
-            return true;
-        }
-
-        validationErrorMessage = "Unable to convert value to a valid integer";
-        return false;
-    }
+    protected override bool TryParseValueFromString(string value, out int result, out string validationErrorMessage) 
+        => throw new NotImplementedException();
 
     private void SetHourValue(ChangeEventArgs args)
     {
@@ -48,6 +39,6 @@
         SetCurrentValue();
     }
 
-    private void SetCurrentValue() => CurrentValue = (_hours * 60) + _minutes;
+    private void SetCurrentValue()
+        => CurrentValue = (_hours * 60) + _minutes;
 }
-

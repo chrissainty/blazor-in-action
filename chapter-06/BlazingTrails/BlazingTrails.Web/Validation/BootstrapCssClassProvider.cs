@@ -13,10 +13,8 @@ namespace BlazingTrails.Web.Validation
             {
                 return isValid ? "is-valid" : "is-invalid";
             }
-            else
-            {
-                return isValid ? "" : "is-invalid";
-            }
+
+            return isValid ? "" : "is-invalid";
         }
     }
 }
