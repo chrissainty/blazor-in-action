@@ -22,6 +22,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\BlazingTrails.Shared\BlazingTrails.Shared.csproj" />
+	  <ProjectReference Include="..\BlazingTrails.ComponentLibrary\BlazingTrails.ComponentLibrary.csproj" />
 	</ItemGroup>
 
 	<Target Name="CheckForNpm" BeforeTargets="RunNpmInstall">
