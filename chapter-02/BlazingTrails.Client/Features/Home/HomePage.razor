@@ -8,18 +8,14 @@
 else
 {
     <div class="grid">
-
         @foreach (var trail in _trails)
         {
             <div class="col mb-4">
                 <TrailCard Trail="trail" />
             </div>
-
         }
-
     </div>
 }
-
 
 @code {
     private IEnumerable<Trail> _trails;
@@ -35,5 +31,4 @@ else
             Console.WriteLine($"There was a problem loading trail data: {ex.Message}");
         }
     }
-
 }
