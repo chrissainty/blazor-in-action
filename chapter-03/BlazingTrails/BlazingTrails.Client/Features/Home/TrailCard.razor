@@ -1,13 +1,15 @@
-﻿<div class="card" style="width: 18rem;">
+﻿<div class="card shadow" style="width: 18rem;">
     <img src="@Trail.Image" class="card-img-top" alt="@Trail.Name">
     <div class="card-body">
         <h5 class="card-title">@Trail.Name</h5>
         <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @Trail.Location</h6>
         <div class="d-flex justify-content-between">
-            <span><span class="oi oi-clock mr-2"></span> @Trail.Time</span>
+            <span><span class="oi oi-clock mr-2"></span> @Trail.TimeFormatted</span>
             <span><span class="oi oi-infinity mr-2"></span> @Trail.Length km</span>
         </div>
-        <button class="btn btn-primary mt-3" @onclick="@(async () => await OnSelected.InvokeAsync(Trail))">View</button>
+        <button class="btn btn-primary mt-3" title="View" @onclick="@(async () => await OnSelected.InvokeAsync(Trail))">
+            <i class="bi bi-binoculars"></i>
+        </button>
     </div>
 </div>
 
