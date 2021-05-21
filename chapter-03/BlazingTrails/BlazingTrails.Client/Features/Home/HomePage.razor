@@ -8,8 +8,7 @@
 else
 {
     <TrailDetails Trail="_selectedTrail" />
-    <div class="row row-cols-1 row-cols-md-2">
-
+    <div class="grid">
         @foreach (var trail in _trails)
         {
             <div class="col mb-4">
@@ -17,7 +16,6 @@ else
             </div>
 
         }
-
     </div>
 }
 
@@ -38,7 +36,5 @@ else
     }
 
     private void HandleTrailSelected(Trail trail)
-    {
-        _selectedTrail = trail;
-    }
+        => _selectedTrail = trail;
 }
