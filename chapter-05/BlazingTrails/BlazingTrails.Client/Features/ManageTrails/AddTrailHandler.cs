@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BlazingTrails.Web.Features.ManageTrails
+namespace BlazingTrails.Client.Features.ManageTrails
 {
     public class AddTrailHandler : IRequestHandler<AddTrailRequest, AddTrailRequest.Response>
     {

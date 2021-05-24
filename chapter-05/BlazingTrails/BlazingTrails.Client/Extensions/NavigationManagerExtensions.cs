@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace BlazingTrails.Web.Extensions
+namespace BlazingTrails.Client.Extensions
 {
     public static class NavigationManagerExtensions
     {
