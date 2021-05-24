@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BlazingTrails.Web
+namespace BlazingTrails.Client
 {
     public class Program
     {

@@ -36,7 +36,6 @@ else
     private IEnumerable<Trail> _searchResults;
     private IEnumerable<Trail> _cachedSearchResults;
     private Trail? _selectedTrail;
-    private string _searchTerm;
 
     [Parameter] public string SearchTerm { get; set; }
 
@@ -58,9 +57,7 @@ else
     }
 
     private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
-    {
-        UpdateFilters();
-    }
+        => UpdateFilters();
 
     private void UpdateFilters()
     {
@@ -90,7 +87,9 @@ else
         StateHasChanged();
     }
 
-    public void Dispose() => NavManager.LocationChanged -= HandleLocationChanged;
+    public void Dispose() 
+        => NavManager.LocationChanged -= HandleLocationChanged;
 
-    private void HandleTrailSelected(Trail trail) => _selectedTrail = trail;
+    private void HandleTrailSelected(Trail trail) 
+        => _selectedTrail = trail;
 }

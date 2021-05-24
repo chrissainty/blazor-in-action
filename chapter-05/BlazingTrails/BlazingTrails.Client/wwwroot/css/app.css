@@ -1,0 +1,88 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+:root {
+    --brand: #448922;
+    --brand-hover: #5da030;
+}
+
+body {
+    background-color: #f9f9f9;
+}
+
+a {
+    color: var(--brand);
+    text-decoration: underline;
+}
+
+    a:hover {
+        color: var(--brand-hover);
+        text-decoration: none;
+    }
+
+.navbar {
+    border-bottom: 2px solid var(--brand);
+    background: linear-gradient(90deg, rgba(255,255,255,1) 5%, rgba(255,255,255,0) 100%), url("../images/navbar-bg.jpg") no-repeat center;
+    background-size: cover;
+}
+
+.btn-primary {
+    background-color: var(--brand);
+    border-color: var(--brand);
+}
+
+    .btn-primary:hover {
+        background-color: var(--brand-hover);
+        border-color: var(--brand-hover);
+    }
+
+.btn-outline-primary {
+    border-color: var(--brand);
+    color: var(--brand);
+}
+
+    .btn-outline-primary:hover {
+        background-color: var(--brand);
+        border-color: var(--brand);
+    }
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 288px);
+    grid-column-gap: 123px;
+    grid-row-gap: 75px;
+}
+
+.validation-message {
+    color: red;
+}
+
+input.invalid,
+textarea.invalid,
+select.invalid {
+    border-color: red;
+}
+
+input.valid.modified,
+text.valid.modified,
+select.valid.modified {
+    border-color: green;
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }

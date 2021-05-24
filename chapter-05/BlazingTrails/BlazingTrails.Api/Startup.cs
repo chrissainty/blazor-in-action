@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using FluentValidation.AspNetCore;
+using System.Reflection;
 
 namespace BlazingTrails.Api
 {
@@ -24,6 +26,7 @@ namespace BlazingTrails.Api
             services.AddRazorPages();
             services.AddDbContext<BlazingTrailsContext>(options => options.UseSqlite(Configuration.GetConnectionString("BlazingTrailsContext")));
             services.AddDatabaseDeveloperPageExceptionFilter();
+            services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.Load("BlazingTrails.Shared")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
