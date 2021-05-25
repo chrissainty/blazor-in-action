@@ -1,3 +1,4 @@
+
 using BlazingTrails.Api.Persistance;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

@@ -1,0 +1,168 @@
+﻿<EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
+    <FluentValidationValidator />
+
+    <FormSection Title="Basic Details"
+                 HelpText="This information is used to identify the trail and can be searched to help hikers find it.">
+
+        <FormFieldSet Width="col-6">
+            <label for="trailName" class="font-weight-bold text-secondary">Name</label>
+            <InputText @bind-Value="_trail.Name" class="form-control" id="trailName" />
+            <ValidationMessage For="@(() => _trail.Name)" />
+        </FormFieldSet>
+
+        <FormFieldSet>
+            <label for="trailDescription" class="font-weight-bold text-secondary">Description</label>
+            <InputTextArea @bind-Value="_trail.Description" rows="6" class="form-control" id="trailDescription" />
+            <ValidationMessage For="@(() => _trail.Description)" />
+        </FormFieldSet>
+
+        <FormFieldSet Width="col-6">
+            <label for="trailLocation" class="font-weight-bold text-secondary">Location</label>
+            <InputText @bind-Value="_trail.Location" class="form-control" id="trailLocation" />
+            <ValidationMessage For="@(() => _trail.Location)" />
+        </FormFieldSet>
+
+        <FormFieldSet Width="col-6">
+            <label for="trailImage" class="font-weight-bold text-secondary">Image</label>
+            @if (string.IsNullOrWhiteSpace(_trail.Image))
+            {
+                <InputFile OnChange="LoadTrailImage" class="form-control-file" id="trailImage" accept=".png,.jpg,.jpeg" />
+            }
+            else
+            {
+                <div class="card bg-dark text-white">
+                    <img src="images/@_trail.Image" />
+                    <div class="card-img-overlay">
+                        <button class="btn btn-primary btn-sm" @onclick="RemoveTrailImage">Remove</button>
+                    </div>
+                </div>
+            }
+        </FormFieldSet>
+
+
+    </FormSection>
+
+    <FormSection Title="Difficulty"
+                 HelpText="Help other hikers out by telling them the length of the trail is how long it might take them.">
+
+        <FormFieldSet Width="col-3">
+            <label for="trailLength" class="font-weight-bold text-secondary">Length (km)</label>
+            <InputNumber @bind-Value="_trail.Length" class="form-control" id="trailLength" />
+            <ValidationMessage For="@(() => _trail.Length)" />
+        </FormFieldSet>
+
+        <FormFieldSet Width="col-5">
+            <label for="trailTime" class="font-weight-bold text-secondary">Time</label>
+            <InputTime @bind-Value="_trail.TimeInMinutes" id="trailTime" />
+            <ValidationMessage For="@(() => _trail.TimeInMinutes)" />
+        </FormFieldSet>
+
+    </FormSection>
+
+    <FormSection Title="Route Instructions"
+                 HelpText="Route instructions are a guide for the trail. This helps hikers new to the trail stay on track.">
+        @{ var i = 0; }
+        @foreach (var routeInstruction in _trail.Route)
+        {
+            i++;
+            routeInstruction.Stage = i;
+
+            <div class="row">
+                <div class="col-2">
+                    <div class="form-group">
+                        <label class="font-weight-bold text-secondary">Stage</label>
+                        <p>@routeInstruction.Stage</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="routeInstructionDescription" class="font-weight-bold text-secondary">Description</label>
+                        <InputText @bind-Value="routeInstruction.Description" class="form-control" id="routeInstructionDescription" />
+                        <ValidationMessage For="@(() => routeInstruction.Description)" />
+                    </div>
+                </div>
+                <div class="col-1 d-flex mt-3">
+                    <button @onclick="@(() => _trail.Route.Remove(routeInstruction))" class="btn btn-link" type="button">
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle-fill text-danger" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-outline-primary" type="button" @onclick="@(() => _trail.Route.Add(new TrailDto.RouteInstruction()))">Add Instruction</button>
+                <ValidationMessage For="@(() => _trail.Route)" />
+            </div>
+        </div>
+    </FormSection>
+
+    <div class="mt-4 mb-5">
+        <div class="row">
+            <div class="offset-4 col-8 text-right">
+                <button class="btn btn-outline-secondary" type="button" @onclick="@(() => _trail = new TrailDto())">Reset</button>
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private TrailDto _trail = new TrailDto();
+    private IBrowserFile trailImage;
+    private EditContext _editContext;
+
+    [Parameter] public Func<TrailDto, IBrowserFile, Task> OnSubmit { get; set; }
+    [Parameter] public TrailDto Trail { get; set; }
+
+
+    public void ResetForm()
+    {
+        _trail = new TrailDto();
+        _editContext = new EditContext(_trail);
+        _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
+        trailImage = null;
+    }
+
+    protected override void OnParametersSet()
+    {
+        _editContext = new EditContext(_trail);
+        _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
+
+        if (Trail != null)
+        {
+            _trail.Id = Trail.Id;
+            _trail.Name = Trail.Name;
+            _trail.Description = Trail.Description;
+            _trail.Location = Trail.Location;
+            _trail.Image = Trail.Image;
+            _trail.ImageAction = ImageAction.None;
+            _trail.Length = Trail.Length;
+            _trail.TimeInMinutes = Trail.TimeInMinutes;
+
+            _trail.Route.Clear();
+            _trail.Route.AddRange(Trail.Route.Select(_ => new TrailDto.RouteInstruction
+            {
+                Stage = _.Stage,
+                Description = _.Description
+            }));
+        }
+    }
+
+    private void LoadTrailImage(InputFileChangeEventArgs e)
+    {
+        trailImage = e.File;
+        _trail.ImageAction = ImageAction.Add;
+    }
+
+    private void RemoveTrailImage()
+    {
+        _trail.Image = "";
+        _trail.ImageAction = ImageAction.Remove;
+    }
+
+    private async Task SubmitForm() => await OnSubmit(_trail, trailImage);
+
+}
