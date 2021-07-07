@@ -75,19 +75,21 @@ else
         }
         else
         {
-            switch (trail.ImageAction)
+            _trail.Name = trail.Name;
+            _trail.Description = trail.Description;
+            _trail.Location = trail.Location;
+            _trail.Length = trail.Length;
+            _trail.TimeInMinutes = trail.TimeInMinutes;
+            _trail.Route.AddRange(trail.Route.Select(_ => new TrailDto.RouteInstruction
             {
-                case ImageAction.Add:
-                    _submitSuccessful = await ProcessImage(trail.Id, image);
-                    break;
-                case ImageAction.Remove:
-                    _trail.Image = "";
-                    _submitSuccessful = true;
-                    break;
-                case ImageAction.None:
-                    _submitSuccessful = true;
-                    break;
-            }
+                Stage = _.Stage,
+                Description = _.Description
+            }));
+
+            _submitSuccessful = true;
+
+            if (trail.ImageAction == ImageAction.Add) _submitSuccessful = await ProcessImage(trail.Id, image);
+            if (trail.ImageAction == ImageAction.Remove) _trail.Image = "";
         }
 
         StateHasChanged();
