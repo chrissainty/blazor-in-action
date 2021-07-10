@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 
 namespace BlazingTrails.Api.Features.ManageTrails.EditTrail
 {
-    public class GetTrailEndpoint : BaseAsyncEndpoint<int, GetTrailRequest.Response>
+    public class GetTrailEndpoint : BaseAsyncEndpoint
+        .WithRequest<int>
+        .WithResponse<GetTrailRequest.Response>
     {
         private readonly BlazingTrailsContext _context;
 
