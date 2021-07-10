@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 
 namespace BlazingTrails.Api.Features.Home.Shared
 {
-    public class GetTrailsEndpoint : BaseAsyncEndpoint<int, GetTrailsRequest.Response>
+    public class GetTrailsEndpoint : BaseAsyncEndpoint
+        .WithRequest<int>
+        .WithResponse<GetTrailsRequest.Response>
     {
         private readonly BlazingTrailsContext _context;
 

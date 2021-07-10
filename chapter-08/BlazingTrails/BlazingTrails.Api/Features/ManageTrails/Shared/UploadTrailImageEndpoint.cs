@@ -12,7 +12,9 @@ using System.Threading.Tasks;
 
 namespace BlazingTrails.Api.Features.ManageTrails.Shared
 {
-    public class UploadTrailImageEndpoint : BaseAsyncEndpoint<int, string>
+    public class UploadTrailImageEndpoint : BaseAsyncEndpoint
+        .WithRequest<int>
+        .WithResponse<string>
     {
         private readonly BlazingTrailsContext _database;
 
