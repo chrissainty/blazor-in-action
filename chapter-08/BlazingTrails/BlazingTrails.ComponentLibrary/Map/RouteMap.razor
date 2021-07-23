@@ -1,9 +1,9 @@
 ﻿@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
 @implements IDisposable
-@using Microsoft.AspNetCore.Components.Forms;
 
 <div class="map-wrapper">
-    @if (IsEditable)
+    @if (!IsReadOnly)
     {
         <div class="controls">
             <button @onclick="DeleteLastWaypoint" class="btn btn-secondary" title="Delete last waypoint" type="button">
@@ -19,13 +19,11 @@
 
     private ElementReference _map;
     private DotNetObjectReference<RouteMap> _routeMapReference;
-    private IJSObjectReference _blazingTrailsMapModule;
-
-    [CascadingParameter] private EditContext CascadedEditContext { get; set; }
+    private IJSObjectReference _routeMapModule;
 
     [Parameter] public string Height { get; set; } = "500px";
     [Parameter] public string Width { get; set; } = "1000px";
-    [Parameter] public bool IsEditable { get; set; }
+    [Parameter] public bool IsReadOnly { get; set; }
     [Parameter] public List<LatLong> Waypoints { get; set; } = new List<LatLong>();
     [Parameter] public EventCallback<LatLong> OnWaypointAdded { get; set; }
     [Parameter] public EventCallback<LatLong> OnWaypointDeleted { get; set; }
@@ -34,29 +32,30 @@
     {
         if (firstRender)
         {
-            Console.WriteLine("First Render Called");
-            _blazingTrailsMapModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/BlazingTrails.ComponentLibrary/map.js");
+            _routeMapModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/BlazingTrails.ComponentLibrary/routeMap.js");
             _routeMapReference = DotNetObjectReference.Create(this);
-            await _blazingTrailsMapModule.InvokeVoidAsync("initialize", _routeMapReference, _map, IsEditable, Waypoints);
-            //await JSRuntime.InvokeVoidAsync("blazingTrails.map.initialize", _routeMapReference, _map);
+            await _routeMapModule.InvokeVoidAsync("initialize", _map, _routeMapReference, Waypoints, IsReadOnly);
         }
     }
 
     public async Task DeleteLastWaypoint()
-        //=> await JSRuntime.InvokeVoidAsync("blazingTrails.map.deleteLastWaypoint", _routeMapReference, _map);
-        => await _blazingTrailsMapModule.InvokeVoidAsync("deleteLastWaypoint", _routeMapReference, _map);
+    {
+        var waypoint = await _routeMapModule.InvokeAsync<LatLong>("deleteLastWaypoint", _map, _routeMapReference);
+        await OnWaypointDeleted.InvokeAsync(waypoint);
+    }
 
     [JSInvokable]
     public async Task WaypointAdded(decimal latitude, decimal longitude)
         => await OnWaypointAdded.InvokeAsync(new LatLong(latitude, longitude));
 
-    [JSInvokable]
-    public async Task WaypointDeleted(decimal latitude, decimal longitude)
-        => await OnWaypointDeleted.InvokeAsync(new LatLong(latitude, longitude));
+    void IDisposable.Dispose()
+        => _routeMapReference?.Dispose();
 
-    public void Dispose()
+    async ValueTask IAsyncDisposable.DisposeAsync()
     {
-        Console.WriteLine("Map Disposed");
-        _routeMapReference?.Dispose();
+        if (_routeMapModule is not null)
+        {
+            await _routeMapModule.DisposeAsync();
+        }
     }
 }

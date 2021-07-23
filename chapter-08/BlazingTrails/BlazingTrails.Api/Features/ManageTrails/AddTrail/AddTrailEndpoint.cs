@@ -29,26 +29,15 @@ namespace BlazingTrails.Api.Features.ManageTrails.AddTrail
                 Location = request.Trail.Location,
                 TimeInMinutes = request.Trail.TimeInMinutes,
                 Length = request.Trail.Length,
-                IsFavourite = false
+                IsFavourite = false,
+                Waypoints = request.Trail.Waypoints.Select(_ => new Waypoint
+                {
+                    Latitude = _.Latitude,
+                    Longitude = _.Longitude
+                }).ToList()
             };
 
             await _database.Trails.AddAsync(trail, cancellationToken);
-
-            //var routeInstructions = request.Trail.Route.Select(_ => new RouteInstruction
-            //{
-            //    Stage = _.Stage,
-            //    Description = _.Description,
-            //    Trail = trail
-            //});
-
-            var waypoints = request.Trail.Waypoints.Select(_ => new Waypoint
-            {
-                Latitude = _.Latitude,
-                Longitude = _.Longitude,
-                Trail = trail
-            });
-
-            await _database.Waypoints.AddRangeAsync(waypoints, cancellationToken);
             await _database.SaveChangesAsync(cancellationToken);
 
             return Ok(trail.Id);

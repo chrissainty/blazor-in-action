@@ -36,7 +36,6 @@ namespace BlazingTrails.Api.Features.ManageTrails.EditTrail
                 trail.Length,
                 trail.Description,
                 trail.Waypoints.Select(_ => new GetTrailRequest.Waypoint(_.Latitude, _.Longitude))));
-                //trail.Route.Select(_ => new GetTrailRequest.RouteInstruction(_.Id, _.Stage, _.Description))));
 
             return Ok(response);
         }

@@ -36,17 +36,10 @@ namespace BlazingTrails.Api.Features.ManageTrails.EditTrail
             trail.Location = request.Trail.Location;
             trail.TimeInMinutes = request.Trail.TimeInMinutes;
             trail.Length = request.Trail.Length;
-            //trail.Route = request.Trail.Route.Select(_ => new RouteInstruction
-            //{
-            //    Stage = _.Stage,
-            //    Description = _.Description,
-            //    Trail = trail
-            //}).ToList();
             trail.Waypoints = request.Trail.Waypoints.Select(_ => new Waypoint
             {
                 Latitude = _.Latitude,
-                Longitude = _.Longitude,
-                Trail = trail
+                Longitude = _.Longitude
             }).ToList();
 
             if (request.Trail.ImageAction == ImageAction.Remove)

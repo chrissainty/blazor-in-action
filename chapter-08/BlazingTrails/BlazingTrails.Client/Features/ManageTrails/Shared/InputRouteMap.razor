@@ -2,7 +2,7 @@
 @inherits InputBase<List<TrailDto.WaypointDto>>
 
 <div class="@CssClass">
-    <RouteMap IsEditable="true" Width="100%" OnWaypointAdded="AddWaypoint" OnWaypointDeleted="DeleteWaypoint" Waypoints="_waypoints" />
+    <RouteMap Width="100%" OnWaypointAdded="AddWaypoint" OnWaypointDeleted="DeleteWaypoint" Waypoints="_waypoints" />
 </div>
 
 @code {
@@ -19,7 +19,7 @@
     }
 
     protected override bool TryParseValueFromString(string value, out List<TrailDto.WaypointDto> result, out string validationErrorMessage)
-    => throw new NotImplementedException();
+        => throw new NotImplementedException();
 
     private void AddWaypoint(LatLong waypoint)
     {
@@ -32,5 +32,4 @@
         _waypoints.Remove(waypoint);
         CurrentValue.Remove(new TrailDto.WaypointDto(waypoint.Lat, waypoint.Lng));
     }
-
 }

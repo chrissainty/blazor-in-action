@@ -13,18 +13,9 @@ namespace BlazingTrails.Shared.Features.ManageTrails.Shared
         public ImageAction ImageAction { get; set; }
         public int TimeInMinutes { get; set; }
         public int Length { get; set; }
-        //public List<RouteInstruction> Route { get; set; } = new List<RouteInstruction>();
-        // new
         public List<WaypointDto> Waypoints { get; set; } = new List<WaypointDto>();
 
-        // new
         public record WaypointDto(decimal Latitude, decimal Longitude);
-
-        //public class RouteInstruction
-        //{
-        //    public int Stage { get; set; }
-        //    public string Description { get; set; }
-        //}
     }
 
     public enum ImageAction
@@ -43,19 +34,7 @@ namespace BlazingTrails.Shared.Features.ManageTrails.Shared
             RuleFor(_ => _.Location).NotEmpty().WithMessage("Please enter a location");
             RuleFor(_ => _.TimeInMinutes).GreaterThan(0).WithMessage("Please enter a time");
             RuleFor(_ => _.Length).GreaterThan(0).WithMessage("Please enter a length");
-            //RuleFor(_ => _.Route).NotEmpty().WithMessage("Please add a route instruction");
-            // new
             RuleFor(_ => _.Waypoints).NotEmpty().WithMessage("Please add a waypoint");
-            //RuleForEach(_ => _.Route).SetValidator(new RouteInstructionValidator());
         }
     }
-
-    //public class RouteInstructionValidator : AbstractValidator<TrailDto.RouteInstruction>
-    //{
-    //    public RouteInstructionValidator()
-    //    {
-    //        RuleFor(_ => _.Stage).NotEmpty().WithMessage("Please enter a stage");
-    //        RuleFor(_ => _.Description).NotEmpty().WithMessage("Please enter a description");
-    //    }
-    //}
 }
