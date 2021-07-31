@@ -1,0 +1,106 @@
+﻿@page "/"
+@inject IMediator Mediator
+@inject NavigationManager NavManager
+
+@if (_trails == null)
+{
+    <p>Loading trails...</p>
+}
+else
+{
+    <TrailDetails Trail="_selectedTrail" />
+
+    <TrailSearch />
+
+    @if (_trails.Any())
+    {
+        <AuthorizeView>
+            <Authorized>
+                <div class="mb-4">
+                    <p class="font-italic text-center">Do you have an awesome trail you'd like to share? <a href="add-trail">Add it here</a>.</p>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                <div class="mb-4">
+                    <p class="font-italic text-center">Do you have an awesome trail you'd like to share? Please <a href="authentication/login">Log in</a>.</p>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+
+        <ViewSwitcher Items="_trails" Context="trail">
+            <GridTemplate>
+                <TrailCard Trail="trail" OnSelected="HandleTrailSelected" />
+            </GridTemplate>
+            <HeaderTemplate>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Length</th>
+                <th>Time</th>
+                <th></th>
+            </HeaderTemplate>
+            <RowTemplate>
+                <th scope="col">@trail.Name</th>
+                <td>@trail.Location</td>
+                <td>@(trail.Length)km</td>
+                <td>@trail.TimeFormatted</td>
+                <td class="text-right">
+                    <AuthorizeView>
+                        @if (trail.Owner.Equals(context.User.Identity.Name, StringComparison.CurrentCultureIgnoreCase) || context.User.IsInRole("Administrator"))
+                                {
+                            <button @onclick="@(() => NavManager.NavigateTo($"/edit-trail/{trail.Id}"))" title="Edit" class="btn btn-outline-secondary">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                                }
+                    </AuthorizeView>
+                    <button @onclick="@(() => HandleTrailSelected(trail))" title="View" class="btn btn-primary">
+                        <i class="bi bi-binoculars"></i>
+                    </button>
+                </td>
+            </RowTemplate>
+        </ViewSwitcher>
+    }
+    else
+    {
+        <div class="no-trails">
+            <svg viewBox="0 0 16 16" class="bi bi-tree" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 0a.5.5 0 0 1 .416.223l3 4.5A.5.5 0 0 1 11 5.5h-.098l2.022 3.235a.5.5 0 0 1-.424.765h-.191l1.638 3.276a.5.5 0 0 1-.447.724h-11a.5.5 0 0 1-.447-.724L3.69 9.5H3.5a.5.5 0 0 1-.424-.765L5.098 5.5H5a.5.5 0 0 1-.416-.777l3-4.5A.5.5 0 0 1 8 0zM5.934 4.5H6a.5.5 0 0 1 .424.765L4.402 8.5H4.5a.5.5 0 0 1 .447.724L3.31 12.5h9.382l-1.638-3.276A.5.5 0 0 1 11.5 8.5h.098L9.576 5.265A.5.5 0 0 1 10 4.5h.066L8 1.401 5.934 4.5z" />
+                <path d="M7 13.5h2V16H7v-2.5z" />
+            </svg>
+            <h3 class="text-muted font-weight-light">We currently don't have any trails, <a href="add-trail">why not add one?</a></h3>
+        </div>
+    }
+}
+
+@code {
+    private IEnumerable<Trail> _trails;
+    private Trail? _selectedTrail;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await Mediator.Send(new GetTrailsRequest());
+            _trails = response.Trails.Select(_ => new Trail
+            {
+                Id = _.Id,
+                Name = _.Name,
+                Image = _.Image,
+                Description = _.Description,
+                Location = _.Location,
+                Length = _.Length,
+                TimeInMinutes = _.TimeInMinutes,
+                Owner = _.Owner,
+                Waypoints = _.Waypoints.Select(_ => new BlazingTrails.ComponentLibrary.Map.LatLong(_.Latitude, _.Longitude))?.ToList()
+            }); ;
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"There was a problem loading trail data: {ex.Message}");
+        }
+    }
+
+    private void HandleTrailSelected(Trail trail)
+    {
+        _selectedTrail = trail;
+    }
+}

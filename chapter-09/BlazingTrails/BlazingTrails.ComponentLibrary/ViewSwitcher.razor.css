@@ -1,0 +1,26 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 288px);
+  grid-column-gap: 123px;
+  grid-row-gap: 75px;
+}
+
+table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #212529;
+  border-collapse: collapse;
+}
+table ::deep th, table ::deep td {
+  padding: 0.75rem;
+  vertical-align: middle;
+}
+table ::deep thead tr th {
+  border-bottom: 4px solid var(--brand);
+  border-top: none;
+}
+table ::deep tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/*# sourceMappingURL=ViewSwitcher.razor.css.map */
