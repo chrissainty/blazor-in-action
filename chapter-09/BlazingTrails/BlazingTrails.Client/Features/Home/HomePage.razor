@@ -22,7 +22,7 @@ else
             </Authorized>
             <NotAuthorized>
                 <div class="mb-4">
-                    <p class="font-italic text-center">Do you have an awesome trail you'd like to share? Please <a href="authentication/login">Log in</a>.</p>
+                    <p class="font-italic text-center">Do you have an awesome trail you'd like to share? Please <a href="authentication/login">log in or sign up</a>.</p>
                 </div>
             </NotAuthorized>
         </AuthorizeView>
@@ -46,11 +46,11 @@ else
                 <td class="text-right">
                     <AuthorizeView>
                         @if (trail.Owner.Equals(context.User.Identity.Name, StringComparison.CurrentCultureIgnoreCase) || context.User.IsInRole("Administrator"))
-                                {
+                        {
                             <button @onclick="@(() => NavManager.NavigateTo($"/edit-trail/{trail.Id}"))" title="Edit" class="btn btn-outline-secondary">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                                }
+                        }
                     </AuthorizeView>
                     <button @onclick="@(() => HandleTrailSelected(trail))" title="View" class="btn btn-primary">
                         <i class="bi bi-binoculars"></i>
@@ -91,7 +91,7 @@ else
                 TimeInMinutes = _.TimeInMinutes,
                 Owner = _.Owner,
                 Waypoints = _.Waypoints.Select(_ => new BlazingTrails.ComponentLibrary.Map.LatLong(_.Latitude, _.Longitude))?.ToList()
-            }); ;
+            });
         }
         catch (HttpRequestException ex)
         {
