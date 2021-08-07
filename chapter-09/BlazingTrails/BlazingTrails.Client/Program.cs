@@ -1,6 +1,5 @@
 using System;
 using System.Net.Http;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using BlazingTrails.Client.Features.Auth;
 using MediatR;
