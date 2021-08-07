@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication.Internal;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
@@ -13,29 +14,26 @@ namespace BlazingTrails.Client.Features.Auth
 
         public async override ValueTask<ClaimsPrincipal> CreateUserAsync(RemoteUserAccount account, RemoteAuthenticationUserOptions options)
         {
-            var user = await base.CreateUserAsync(account, options);
+            var initialUser = await base.CreateUserAsync(account, options);
 
-            var claimsIdentity = (ClaimsIdentity)user.Identity;
-
-            if (account != null)
+            if (initialUser.Identity.IsAuthenticated)
             {
-                foreach (var kvp in account.AdditionalProperties)
+                var userIdentity = (ClaimsIdentity)initialUser.Identity;
+
+                account.AdditionalProperties.TryGetValue(ClaimTypes.Role, out var roleClaimValue);
+
+                if (roleClaimValue is not null && roleClaimValue is JsonElement element && element.ValueKind == JsonValueKind.Array)
                 {
-                    var name = kvp.Key;
-                    var value = kvp.Value;
-                    if (value != null && value is JsonElement element && element.ValueKind == JsonValueKind.Array)
-                    {
-                        claimsIdentity.RemoveClaim(claimsIdentity.FindFirst(kvp.Key));
+                    userIdentity.RemoveClaim(userIdentity.FindFirst(ClaimTypes.Role));
 
-                        var claims = element.EnumerateArray()
-                                            .Select(x => new Claim(kvp.Key, x.ToString()));
+                    var claims = element.EnumerateArray()
+                                        .Select(x => new Claim(ClaimTypes.Role, x.ToString()));
 
-                        claimsIdentity.AddClaims(claims);
-                    }
+                    userIdentity.AddClaims(claims);
                 }
             }
 
-            return user;
+            return initialUser;
         }
     }
 }

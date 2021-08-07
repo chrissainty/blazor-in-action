@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using BlazingTrails.Client.Features.Auth;
 using MediatR;
@@ -19,9 +20,6 @@ namespace BlazingTrails.Client
 
             builder.Services.AddHttpClient("SecureAPIClient", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
                             .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
-
-            builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
-                            .CreateClient("SecureAPIClient"));
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             

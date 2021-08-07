@@ -9,16 +9,17 @@ namespace BlazingTrails.Client.Features.ManageTrails.AddTrail
 {
     public class AddTrailHandler : IRequestHandler<AddTrailRequest, AddTrailRequest.Response>
     {
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public AddTrailHandler(HttpClient httpClient)
+        public AddTrailHandler(IHttpClientFactory httpClientFactory)
         {
-            _httpClient = httpClient;
+            _httpClientFactory = httpClientFactory;
         }
 
         public async Task<AddTrailRequest.Response> Handle(AddTrailRequest request, CancellationToken cancellationToken)
         {
-            var response = await _httpClient.PostAsJsonAsync(AddTrailRequest.RouteTemplate, request, cancellationToken);
+            var client = _httpClientFactory.CreateClient("SecureAPIClient");
+            var response = await client.PostAsJsonAsync(AddTrailRequest.RouteTemplate, request, cancellationToken);
 
             if (response.IsSuccessStatusCode)
             {

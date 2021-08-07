@@ -18,10 +18,10 @@ namespace BlazingTrails.Client.Features.ManageTrails.EditTrail
 
         public async Task<EditTrailRequest.Response> Handle(EditTrailRequest request, CancellationToken cancellationToken)
         {
-            var client = _httpClientFactory.CreateClient("SecureAPIClient");
-            var response = await client.PutAsJsonAsync(EditTrailRequest.RouteTemplate, request, cancellationToken);
+        var client = _httpClientFactory.CreateClient("SecureAPIClient");
+        var response = await client.PutAsJsonAsync(EditTrailRequest.RouteTemplate, request, cancellationToken);
 
-            if (response.IsSuccessStatusCode)
+        if (response.IsSuccessStatusCode)
             {
                 return new EditTrailRequest.Response(true);
             }
