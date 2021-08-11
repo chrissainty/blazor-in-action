@@ -29,7 +29,6 @@ namespace BlazingTrails.Client
             {
                 builder.Configuration.Bind("Auth0", options.ProviderOptions);
                 options.ProviderOptions.ResponseType = "code";
-                options.UserOptions.NameClaim = ClaimTypes.GivenName;
             }).AddAccountClaimsPrincipalFactory<CustomUserFactory<RemoteUserAccount>>();
 
             await builder.Build().RunAsync();
