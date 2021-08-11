@@ -1,0 +1,19 @@
+﻿.input-time {
+    display: flex;
+    flex-direction: row;
+
+    div {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+
+        input {
+            width: 65px;
+            margin-right: 10px;
+        }
+
+        label {
+            margin-bottom: 0;
+        }
+    }
+}
