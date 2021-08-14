@@ -1,0 +1,54 @@
+﻿@inject NavigationManager NavManager
+@inject AppStateImproved AppState
+
+<div class="card shadow" style="width: 18rem;">
+    <img src="@(!string.IsNullOrWhiteSpace(Trail.Image) ? $"images/{Trail.Image}" : "https://via.placeholder.com/286x190.jpg?text=No+Image+For+Trail")" class="card-img-top">
+    <div class="card-body">
+        <h5 class="card-title">@Trail.Name</h5>
+        <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @Trail.Location</h6>
+        <div class="d-flex justify-content-between">
+            <span><span class="oi oi-clock mr-2"></span> @Trail.TimeFormatted</span>
+            <span><span class="oi oi-infinity mr-2"></span> @Trail.Length km</span>
+        </div>
+        <button class="btn btn-primary mt-3 mr-1" title="View" @onclick="@(async () => await OnSelected.InvokeAsync(Trail))">
+            <i class="bi bi-binoculars"></i>
+        </button>
+        @if (_isFavorite)
+        {
+            <button class="btn btn-outline-primary mt-3" title="Favorite" @onclick="@(() => AppState.FavoriteTrailsState.RemoveFavorite(Trail))">
+                <i class="bi bi-heart-fill"></i>
+            </button>
+        }
+        else
+        {
+            <button class="btn btn-outline-primary mt-3" title="Favorite" @onclick="@(() => AppState.FavoriteTrailsState.AddFavorite(Trail))">
+                <i class="bi bi-heart"></i>
+            </button>
+        }
+        <AuthorizeView>
+            @if (Trail.Owner.Equals(context.User.Identity.Name, StringComparison.CurrentCultureIgnoreCase) || context.User.IsInRole("Administrator"))
+            {
+                <button class="btn btn-outline-secondary mt-3 float-right" title="Edit" @onclick="@(() => NavManager.NavigateTo($"/edit-trail/{Trail.Id}"))">
+                    <i class="bi bi-pencil"></i>
+                </button>
+            }
+        </AuthorizeView>
+    </div>
+</div>
+
+@code {
+    private bool _isFavorite;
+
+    [Parameter] public Trail Trail { get; set; }
+    [Parameter] public EventCallback<Trail> OnSelected { get; set; }
+
+    protected override void OnInitialized()
+    {
+        CheckIfFavorite();
+        AppState.FavoriteTrailsState.OnChange += CheckIfFavorite;
+    }
+
+    private void CheckIfFavorite()
+        => _isFavorite = AppState.FavoriteTrailsState.IsFavorite(Trail);
+
+}

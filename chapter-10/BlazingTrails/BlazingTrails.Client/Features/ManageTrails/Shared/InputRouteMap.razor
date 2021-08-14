@@ -1,0 +1,35 @@
+﻿@using BlazingTrails.ComponentLibrary.Map
+@inherits InputBase<List<TrailDto.WaypointDto>>
+
+<div class="@CssClass">
+    <RouteMap Width="100%" OnWaypointAdded="AddWaypoint" OnWaypointDeleted="DeleteWaypoint" Waypoints="_waypoints" />
+</div>
+
+@code {
+
+    private List<LatLong> _waypoints = new List<LatLong>();
+
+    protected override void OnParametersSet()
+    {
+        if (CurrentValue.Count > 0)
+        {
+            _waypoints.Clear();
+            _waypoints.AddRange(CurrentValue.Select(_ => new LatLong(_.Latitude, _.Longitude)));
+        }
+    }
+
+    protected override bool TryParseValueFromString(string value, out List<TrailDto.WaypointDto> result, out string validationErrorMessage)
+        => throw new NotImplementedException();
+
+    private void AddWaypoint(LatLong waypoint)
+    {
+        _waypoints.Add(waypoint);
+        CurrentValue.Add(new TrailDto.WaypointDto(waypoint.Lat, waypoint.Lng));
+    }
+
+    private void DeleteWaypoint(LatLong waypoint)
+    {
+        _waypoints.Remove(waypoint);
+        CurrentValue.Remove(new TrailDto.WaypointDto(waypoint.Lat, waypoint.Lng));
+    }
+}
