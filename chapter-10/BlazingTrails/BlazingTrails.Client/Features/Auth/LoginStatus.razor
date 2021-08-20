@@ -1,0 +1,24 @@
+﻿@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+
+<div class="text-right">
+    <AuthorizeView>
+        <Authorized>
+            <div>
+                Hello, @context.User.Identity.Name!
+                <a href="#" @onclick="BeginSignOut">Log out</a>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <a href="authentication/login">Log in/Sign up</a>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
+
+@code{
+    private async Task BeginSignOut(MouseEventArgs args)
+    {
+        await SignOutManager.SetSignOutState();
+        Navigation.NavigateTo("authentication/logout");
+    }
+}
