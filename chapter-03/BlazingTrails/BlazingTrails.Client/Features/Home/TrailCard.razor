@@ -3,11 +3,11 @@
     <div class="card-body">
         <h5 class="card-title">@Trail.Name</h5>
         <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @Trail.Location</h6>
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between mb-3">
             <span><span class="oi oi-clock mr-2"></span> @Trail.TimeFormatted</span>
             <span><span class="oi oi-infinity mr-2"></span> @Trail.Length km</span>
         </div>
-        <button class="btn btn-primary mt-3" title="View" @onclick="@(async () => await OnSelected.InvokeAsync(Trail))">
+        <button class="btn btn-primary" title="View" @onclick="@(async () => await OnSelected.InvokeAsync(Trail))">
             <i class="bi bi-binoculars"></i>
         </button>
     </div>

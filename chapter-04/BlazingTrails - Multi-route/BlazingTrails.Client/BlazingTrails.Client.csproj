@@ -11,6 +11,11 @@
 		<PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<Watch Include="**/*.scss" />
+		<None Update="**/*.css" Watch="false" />
+	</ItemGroup>
+
 	<Target Name="CheckForNpm" BeforeTargets="RunNpmInstall">
 		<Exec Command="npm --version" ContinueOnError="true">
 			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
