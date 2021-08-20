@@ -1,5 +1,4 @@
 ﻿@inject AppState AppState
-@inject AppStateImproved AppStateImproved
 
 <EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
     <FluentValidationValidator />
@@ -90,8 +89,7 @@
 
     public void ResetForm()
     {
-        //AppState.ClearTrail();
-        AppStateImproved.AddTrailState.ClearTrail();
+        AppState.AddTrailState.ClearTrail();
         _trail = new TrailDto();
         _editContext = new EditContext(_trail);
         _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
@@ -102,32 +100,28 @@
     {
         if (Trail is not null)
         {
-            PopulateTrail(Trail);
+            _trail.Id = Trail.Id;
+            _trail.Name = Trail.Name;
+            _trail.Description = Trail.Description;
+            _trail.Location = Trail.Location;
+            _trail.Image = Trail.Image;
+            _trail.ImageAction = ImageAction.None;
+            _trail.Length = Trail.Length;
+            _trail.TimeInMinutes = Trail.TimeInMinutes;
+
+            _trail.Waypoints.Clear();
+            _trail.Waypoints.AddRange(Trail.Waypoints.Select(_ => new TrailDto.WaypointDto(_.Latitude, _.Longitude)));
+
+            _editContext = new EditContext(_trail);
         }
         else
         {
-            //var savedTrail = AppState.GetTrail();
-            var savedTrail = AppStateImproved.AddTrailState.GetTrail();
-            PopulateTrail(savedTrail);
+            var newTrail = AppState.AddTrailState.GetTrail();
+            _editContext = new EditContext(newTrail);
         }
 
         _editContext = new EditContext(_trail);
         _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
-    }
-
-    private void PopulateTrail(TrailDto trail)
-    {
-        _trail.Id = trail.Id;
-        _trail.Name = trail.Name;
-        _trail.Description = trail.Description;
-        _trail.Location = trail.Location;
-        _trail.Image = trail.Image;
-        _trail.ImageAction = ImageAction.None;
-        _trail.Length = trail.Length;
-        _trail.TimeInMinutes = trail.TimeInMinutes;
-
-        _trail.Waypoints.Clear();
-        _trail.Waypoints.AddRange(trail.Waypoints.Select(_ => new TrailDto.WaypointDto(_.Latitude, _.Longitude)));
     }
 
     private void LoadTrailImage(InputFileChangeEventArgs e)

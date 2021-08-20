@@ -34,7 +34,6 @@ namespace BlazingTrails.Client
 
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddScoped<AppState>();
-            builder.Services.AddScoped<AppStateImproved>();
 
             await builder.Build().RunAsync();
         }

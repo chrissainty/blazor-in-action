@@ -1,7 +1,4 @@
-@using BlazingTrails.Client.Features.FavoriteTrails
-
 @inject AppState AppState
-@inject AppStateImproved AppStateImproved
 
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly">
@@ -30,8 +27,7 @@
     {
         if (firstRender)
         {
-            //await AppState.InitializeAsync();
-            await AppStateImproved.FavoriteTrailsState.InitializeAsync();
+            await AppState.Initialize();
         }
     }
 

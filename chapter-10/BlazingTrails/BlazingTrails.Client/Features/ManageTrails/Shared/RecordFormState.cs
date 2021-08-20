@@ -9,7 +9,6 @@ namespace BlazingTrails.Client.Features.ManageTrails.Shared
     public class RecordFormState : ComponentBase
     {
         [Inject] public AppState AppState { get; set; }
-        [Inject] public AppStateImproved AppStateImproved { get; set; }
 
         [CascadingParameter] private EditContext CascadedEditContext { get; set; }
 
@@ -29,8 +28,7 @@ namespace BlazingTrails.Client.Features.ManageTrails.Shared
 
             if (trail.Id == 0)
             {
-                //AppState.SaveTrail(trail);
-                AppStateImproved.AddTrailState.SaveTrail(trail);
+                AppState.AddTrailState.SaveTrail(trail);
             }
         }
     }

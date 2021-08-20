@@ -24,11 +24,11 @@ namespace BlazingTrails.Client.State
             _localStorageService = localStorageService;
         }
 
-        public async Task InitializeAsync()
+        public async Task Initialize()
         {
             if (!_isInitialized)
             {
-                await LoadFavoriteTrails();
+                _favoriteTrails = await _localStorageService.GetItemAsync<List<Trail>>(FavouriteTrailsKey) ?? new List<Trail>();
                 _isInitialized = true;
                 NotifyStateHasChanged();
             }
@@ -59,13 +59,9 @@ namespace BlazingTrails.Client.State
         }
 
         public bool IsFavorite(Trail trail)
-        {
-            return _favoriteTrails.Any(_ => _.Id == trail.Id);
-        }
+            => _favoriteTrails.Any(_ => _.Id == trail.Id);
 
-        private async Task LoadFavoriteTrails()
-            => _favoriteTrails = await _localStorageService.GetItemAsync<List<Trail>>(FavouriteTrailsKey) ?? new List<Trail>();
-
-        private void NotifyStateHasChanged() => OnChange?.Invoke();
+        private void NotifyStateHasChanged() 
+            => OnChange?.Invoke();
     }
 }

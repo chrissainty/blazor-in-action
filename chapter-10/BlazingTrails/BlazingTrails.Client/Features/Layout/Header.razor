@@ -1,5 +1,5 @@
 ﻿@using BlazingTrails.Client.Features.Auth
-@inject AppStateImproved AppState
+@inject AppState AppState
 @implements IDisposable
 
 <nav class="navbar mb-3 shadow">
@@ -15,11 +15,9 @@
 
 @code {
 
-    private int _favouriteTrailCount;
-
     protected override void OnInitialized()
         => AppState.FavoriteTrailsState.OnChange += StateHasChanged;
 
     void IDisposable.Dispose()
-        => AppState.FavoriteTrailsState.OnChange -= StateHasChanged;
+    => AppState.FavoriteTrailsState.OnChange -= StateHasChanged;
 }

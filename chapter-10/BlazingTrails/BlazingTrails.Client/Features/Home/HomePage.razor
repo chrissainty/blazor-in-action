@@ -1,7 +1,6 @@
 ﻿@page "/"
 @inject IMediator Mediator
 @inject NavigationManager NavManager
-@inject AppStateImproved AppState
 
 @if (_trails == null)
 {
@@ -53,18 +52,7 @@ else
                             </button>
                                 }
                     </AuthorizeView>
-                    @if (AppState.FavoriteTrailsState.IsFavorite(trail))
-                    {
-                        <button class="btn btn-outline-primary mr-1" title="Favorite" @onclick="@(() => AppState.FavoriteTrailsState.RemoveFavorite(trail))">
-                            <i class="bi bi-heart-fill"></i>
-                        </button>
-                    }
-                    else
-                    {
-                        <button class="btn btn-outline-primary mr-1" title="Favorite" @onclick="@(() => AppState.FavoriteTrailsState.AddFavorite(trail))">
-                            <i class="bi bi-heart"></i>
-                        </button>
-                    }
+                    <FavoriteButton Trail="trail" />
                     <button @onclick="@(() => HandleTrailSelected(trail))" title="View" class="btn btn-primary">
                         <i class="bi bi-binoculars"></i>
                     </button>

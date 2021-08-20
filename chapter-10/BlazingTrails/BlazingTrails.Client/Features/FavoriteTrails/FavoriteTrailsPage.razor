@@ -1,5 +1,5 @@
 ﻿@page "/favorite-trails"
-@inject AppStateImproved AppState
+@inject AppState AppState
 @implements IDisposable
 
 <nav aria-label="breadcrumb">
@@ -11,11 +11,7 @@
 
 <h3 class="mt-5 mb-4">Favorite Trails</h3>
 
-@if (AppState.FavoriteTrailsState.FavoriteTrails == null)
-{
-    <p>Loading trails...</p>
-}
-else if (AppState.FavoriteTrailsState.FavoriteTrails.Any())
+@if (AppState.FavoriteTrailsState.FavoriteTrails.Any())
 {
     <TrailDetails Trail="_selectedTrail" />
 
