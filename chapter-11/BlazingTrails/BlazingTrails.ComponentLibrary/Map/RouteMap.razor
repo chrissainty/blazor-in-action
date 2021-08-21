@@ -1,0 +1,61 @@
+﻿@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
+@implements IDisposable
+
+<div class="map-wrapper">
+    @if (!IsReadOnly)
+    {
+        <div class="controls">
+            <button @onclick="DeleteLastWaypoint" class="btn btn-secondary" title="Delete last waypoint" type="button">
+                <i class="bi bi-trash"></i> Remove Last Waypoint
+            </button>
+        </div>
+    }
+
+    <div style="height: @(Height); width:@(Width);" @ref="_map"></div>
+</div>
+
+@code {
+
+    private ElementReference _map;
+    private DotNetObjectReference<RouteMap> _routeMapReference;
+    private IJSObjectReference _routeMapModule;
+
+    [Parameter] public string Height { get; set; } = "500px";
+    [Parameter] public string Width { get; set; } = "1000px";
+    [Parameter] public bool IsReadOnly { get; set; }
+    [Parameter] public List<LatLong> Waypoints { get; set; } = new List<LatLong>();
+    [Parameter] public EventCallback<LatLong> OnWaypointAdded { get; set; }
+    [Parameter] public EventCallback<LatLong> OnWaypointDeleted { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _routeMapModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/BlazingTrails.ComponentLibrary/routeMap.js");
+            _routeMapReference = DotNetObjectReference.Create(this);
+            await _routeMapModule.InvokeVoidAsync("initialize", _map, _routeMapReference, Waypoints, IsReadOnly);
+        }
+    }
+
+    public async Task DeleteLastWaypoint()
+    {
+        var waypoint = await _routeMapModule.InvokeAsync<LatLong>("deleteLastWaypoint", _map, _routeMapReference);
+        await OnWaypointDeleted.InvokeAsync(waypoint);
+    }
+
+    [JSInvokable]
+    public async Task WaypointAdded(decimal latitude, decimal longitude)
+        => await OnWaypointAdded.InvokeAsync(new LatLong(latitude, longitude));
+
+    void IDisposable.Dispose()
+        => _routeMapReference?.Dispose();
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        if (_routeMapModule is not null)
+        {
+            await _routeMapModule.DisposeAsync();
+        }
+    }
+}

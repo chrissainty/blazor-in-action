@@ -1,0 +1,45 @@
+﻿@page "/favorite-trails"
+@inject AppState AppState
+@implements IDisposable
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Favorite Trails</li>
+    </ol>
+</nav>
+
+<h3 class="mt-5 mb-4">Favorite Trails</h3>
+
+@if (AppState.FavoriteTrailsState.FavoriteTrails.Any())
+{
+    <TrailDetails Trail="_selectedTrail" />
+
+    <div class="grid">
+
+        @foreach (var trail in AppState.FavoriteTrailsState.FavoriteTrails)
+        {
+            <TrailCard Trail="trail" OnSelected="HandleTrailSelected" />
+        }
+
+    </div>
+}
+else
+{
+    <NoTrails>
+        You don't have any favorite trails :(
+    </NoTrails>
+}
+
+@code {
+    private Trail? _selectedTrail;
+
+    protected override void OnInitialized()
+        => AppState.FavoriteTrailsState.OnChange += StateHasChanged;
+
+    private void HandleTrailSelected(Trail trail)
+        => _selectedTrail = trail;
+
+    void IDisposable.Dispose()
+        => AppState.FavoriteTrailsState.OnChange -= StateHasChanged;
+}
