@@ -1,17 +1,20 @@
 ﻿@inherits TestContext
-@using Microsoft.AspNetCore.Components.Authorization
-@using BlazingTrails.Client.Features.Shared
-@using BlazingTrails.Client.State
-@inject AuthenticationStateProvider AuthenticationStateProvider
 
-@code {
+@code 
+{
+    private readonly TestAuthorizationContext authContext;
+
+    public TrailCardTests()
+    {
+        this.Services.AddScoped<AppState>();
+        authContext = this.AddTestAuthorization();
+        this.AddBlazoredLocalStorage();
+    }
+
     [Fact]
     public void RendersEditButton_When_UserIsAuthorized()
     {
         // Arrange
-        this.Services.AddScoped<AppState>();
-        var authContext = this.AddTestAuthorization();
-        this.AddBlazoredLocalStorage();
         authContext.SetAuthorized("Test User");
         var testTrail = CreateTestTrail();
 
@@ -27,9 +30,6 @@
     public void RendersEditButton_When_UserIsAdmin()
     {
         // Arrange
-        this.Services.AddScoped<AppState>();
-        var authContext = this.AddTestAuthorization();
-        this.AddBlazoredLocalStorage();
         authContext.SetAuthorized("Admin User");
         authContext.SetRoles("Administrator");
         var testTrail = CreateTestTrail();

@@ -1,17 +1,17 @@
 ﻿@inherits TestContext
-@using Microsoft.AspNetCore.Components.Authorization
-@using BlazingTrails.Client.Features.Shared
-@using BlazingTrails.Client.State
-@inject AuthenticationStateProvider AuthenticationStateProvider
 
-@code {
+@code 
+{
+    public FavoriteButtonTests()
+    {
+        this.Services.AddScoped<AppState>();
+        this.AddBlazoredLocalStorage();
+    }
 
     [Fact]
     public void RendersAddFavoriteButton_When_TrailIsNotFavorited()
     {
         // Arrange
-        this.Services.AddScoped<AppState>();
-        this.AddBlazoredLocalStorage();
         var testTrail = new Trail
         {
             Id = 1
@@ -31,8 +31,6 @@
     public async Task RendersRemoveFavoriteButton_When_TrailIsFavorited()
     {
         // Arrange
-        this.Services.AddScoped<AppState>();
-        this.AddBlazoredLocalStorage();
         var testTrail = new Trail
         {
             Id = 1
