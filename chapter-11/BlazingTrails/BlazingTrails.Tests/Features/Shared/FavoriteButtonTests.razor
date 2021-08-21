@@ -1,0 +1,55 @@
+﻿@inherits TestContext
+@using Microsoft.AspNetCore.Components.Authorization
+@using BlazingTrails.Client.Features.Shared
+@using BlazingTrails.Client.State
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@code {
+
+    [Fact]
+    public void RendersAddFavoriteButton_When_TrailIsNotFavorited()
+    {
+        // Arrange
+        this.Services.AddScoped<AppState>();
+        this.AddBlazoredLocalStorage();
+        var testTrail = new Trail
+        {
+            Id = 1
+        };
+
+        // Act
+        var cut = Render(@<FavoriteButton Trail="testTrail" />);
+
+        // Assert
+        cut.MarkupMatches(@<button class="btn btn-outline-primary ml-1" title="Favorite">
+                               <i class="bi bi-heart"></i>
+                           </button>
+    );
+    }
+
+    [Fact]
+    public async Task RendersRemoveFavoriteButton_When_TrailIsFavorited()
+    {
+        // Arrange
+        this.Services.AddScoped<AppState>();
+        this.AddBlazoredLocalStorage();
+        var testTrail = new Trail
+        {
+            Id = 1
+        };
+
+        var appState = this.Services.GetService<AppState>();
+        await appState.FavoriteTrailsState.AddFavorite(testTrail);
+
+        // Act
+        var cut = Render(
+            @<FavoriteButton Trail="testTrail" />
+        );
+
+        // Assert
+        cut.MarkupMatches(
+            @<button class="btn btn-outline-primary ml-1" title="Favorite">
+                <i class="bi bi-heart-fill"></i>
+            </button>);
+    }
+}

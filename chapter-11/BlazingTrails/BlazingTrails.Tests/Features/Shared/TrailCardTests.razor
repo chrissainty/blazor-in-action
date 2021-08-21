@@ -1,0 +1,57 @@
+﻿@inherits TestContext
+@using Microsoft.AspNetCore.Components.Authorization
+@using BlazingTrails.Client.Features.Shared
+@using BlazingTrails.Client.State
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@code {
+    [Fact]
+    public void RendersEditButton_When_UserIsAuthorized()
+    {
+        // Arrange
+        this.Services.AddScoped<AppState>();
+        var authContext = this.AddTestAuthorization();
+        this.AddBlazoredLocalStorage();
+        authContext.SetAuthorized("Test User");
+        var testTrail = CreateTestTrail();
+
+        // Act
+        var cut = Render(@<TrailCard Trail="testTrail" />);
+
+        // Assert
+        var editButton = cut.Find("button[title=\"Edit\"]");
+        Assert.NotNull(editButton);
+    }
+
+    [Fact]
+    public void RendersEditButton_When_UserIsAdmin()
+    {
+        // Arrange
+        this.Services.AddScoped<AppState>();
+        var authContext = this.AddTestAuthorization();
+        this.AddBlazoredLocalStorage();
+        authContext.SetAuthorized("Admin User");
+        authContext.SetRoles("Administrator");
+        var testTrail = CreateTestTrail();
+
+        // Act
+        var cut = Render(@<TrailCard Trail="testTrail" />);
+
+        // Assert
+        var editButton = cut.Find("button[title=\"Edit\"]");
+        Assert.NotNull(editButton);
+    }
+
+    private Trail CreateTestTrail()
+    {
+        return new Trail
+        {
+                Id = 1,
+                Name = "Test Trail",
+                Location = "Test Location",
+                TimeInMinutes = 60,
+                Length = 10,
+                Owner = "Test User"
+        };
+    }
+}
