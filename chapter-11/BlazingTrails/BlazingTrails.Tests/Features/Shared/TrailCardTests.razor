@@ -6,9 +6,9 @@
 
     public TrailCardTests()
     {
+        this.AddBlazoredLocalStorage();
         this.Services.AddScoped<AppState>();
         authContext = this.AddTestAuthorization();
-        this.AddBlazoredLocalStorage();
     }
 
     [Fact]

@@ -4,8 +4,8 @@
 {
     public FavoriteButtonTests()
     {
-        this.Services.AddScoped<AppState>();
         this.AddBlazoredLocalStorage();
+        this.Services.AddScoped<AppState>();
     }
 
     [Fact]
@@ -21,10 +21,11 @@
         var cut = Render(@<FavoriteButton Trail="testTrail" />);
 
         // Assert
-        cut.MarkupMatches(@<button class="btn btn-outline-primary ml-1" title="Favorite">
-                               <i class="bi bi-heart"></i>
-                           </button>
-    );
+        cut.MarkupMatches(
+            @<button class="btn btn-outline-primary ml-1" title="Favorite">
+                <i class="bi bi-heart"></i>
+            </button>
+        );
     }
 
     [Fact]
@@ -48,6 +49,46 @@
         cut.MarkupMatches(
             @<button class="btn btn-outline-primary ml-1" title="Favorite">
                 <i class="bi bi-heart-fill"></i>
-            </button>);
+            </button>
+    );
+    }
+
+    [Fact]
+    public void AddTrailToFavorites_When_TrailIsNotAFavorite()
+    {
+        // Arrange
+        var testTrail = new Trail
+        {
+            Id = 1
+        };
+        var cut = Render(@<FavoriteButton Trail="testTrail" />);
+        var button = cut.Find("button");
+
+        //Act
+        button.Click();
+
+        // Assert
+        var appState = this.Services.GetService<AppState>();
+        Assert.True(appState.FavoriteTrailsState.IsFavorite(testTrail));
+    }
+
+    [Fact]
+    public async Task RemoveTrailFromFavorites_When_TrailIsFavorite()
+    {
+        // Arrange
+        var testTrail = new Trail
+        {
+            Id = 1
+        };
+        var appState = this.Services.GetService<AppState>();
+        await appState.FavoriteTrailsState.AddFavorite(testTrail);
+        var cut = Render(@<FavoriteButton Trail="testTrail" />);
+        var button = cut.Find("button");
+
+        //Act
+        button.Click();
+
+        // Assert
+        Assert.False(appState.FavoriteTrailsState.IsFavorite(testTrail));
     }
 }

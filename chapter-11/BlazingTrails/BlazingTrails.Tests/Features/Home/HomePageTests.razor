@@ -1,0 +1,47 @@
+﻿@inherits TestContext
+
+@code {
+    private readonly TestAuthorizationContext authContext;
+
+    public HomePageTests()
+    {
+        this.AddBlazoredLocalStorage();
+        this.Services.AddScoped<AppState>();
+        this.Services.AddMediatR(typeof(HomePageTests).Assembly);
+        authContext = this.AddTestAuthorization();
+    }
+
+    [Fact]
+    public void RendersThreeTrailCards_When_ThreeTrailsExist()
+    {
+        // Arrange
+        authContext.SetNotAuthorized();
+
+        // Act
+        var cut = Render(@<BlazingTrails.Client.Features.Home.HomePage />
+    );
+
+        // Assert
+        var trailCards = cut.FindComponents<TrailCard>();
+        Assert.Equal(3, trailCards.Count);
+    }
+
+    [Fact]
+    public void RendersTrailDetails_When_TrailSelected()
+    {
+        // Arrange
+        authContext.SetNotAuthorized();
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        var cut = Render(@<BlazingTrails.Client.Features.Home.HomePage />);
+        var trailCards = cut.FindComponents<TrailCard>();
+        var viewButton = trailCards[0].Find("button[title=\"View\"]");
+
+        // Act
+        viewButton.Click();
+
+        // Assert
+        var trailDetails = cut.FindComponent<TrailDetails>();
+        var trailName = trailDetails.Find("h3");
+        Assert.Equal(trailCards[0].Instance.Trail.Name, trailName.TextContent);
+    }
+}
