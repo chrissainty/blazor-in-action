@@ -1,0 +1,39 @@
+﻿@inherits TestContext
+@using BlazingTrails.ComponentLibrary.Map
+
+@code {
+    private BunitJSModuleInterop _routeMapModule;
+    private JSRuntimeInvocationHandler _routeMapModuleInitializeInvocation;
+
+    public RouteMapTests()
+    {
+        JSInterop.Mode = JSRuntimeMode.Strict;
+        _routeMapModule = JSInterop.SetupModule("./_content/BlazingTrails.ComponentLibrary/routeMap.js");
+        _routeMapModuleInitializeInvocation = _routeMapModule.SetupVoid("initialize", _ => true);
+    }
+
+    [Fact]
+    public void InitializesMap_When_ComponentFirstRenders()
+    {
+        // Arrange / Act
+        var cut = Render(@<BlazingTrails.ComponentLibrary.Map.RouteMap />);
+
+        // Assert
+        _routeMapModuleInitializeInvocation.VerifyInvoke("initialize", calledTimes: 1);
+    }
+
+    [Fact]
+    public void CallsDeleteLastWaypointFunction_When_DeleteLastWaypointButtonClicked()
+    {
+        // Arrange
+        var plannedInvocation = _routeMapModule.Setup<LatLong>("deleteLastWaypoint", _ => true);
+        var cut = Render(@<BlazingTrails.ComponentLibrary.Map.RouteMap />);
+        var deleteWaypointButton = cut.Find("button[title=\"Delete last waypoint\"]");
+
+        // Act
+        deleteWaypointButton.Click();
+
+        // Assert
+        plannedInvocation.VerifyInvoke("deleteLastWaypoint", calledTimes: 1);
+    }
+}

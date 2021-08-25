@@ -21,10 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlazingTrails.Client\BlazingTrails.Client.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ComponentLibraryTests\" />
+    <ProjectReference Include="..\BlazingTrails.ComponentLibrary\BlazingTrails.ComponentLibrary.csproj" />
   </ItemGroup>
 
 </Project>

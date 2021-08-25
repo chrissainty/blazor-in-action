@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BlazingTrails.Tests.Features.Home
+namespace BlazingTrails.Tests.Client.Features.Home
 {
     public class GetTrailsHandler : IRequestHandler<GetTrailsRequest, GetTrailsRequest.Response>
     {
