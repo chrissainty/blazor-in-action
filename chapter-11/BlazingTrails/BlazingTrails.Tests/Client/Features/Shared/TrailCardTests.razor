@@ -2,21 +2,24 @@
 
 @code 
 {
-    private readonly TestAuthorizationContext authContext;
+    private readonly TestAuthorizationContext _authContext;
+    private readonly Fixture _fixture = new();
 
     public TrailCardTests()
     {
         this.AddBlazoredLocalStorage();
         this.Services.AddScoped<AppState>();
-        authContext = this.AddTestAuthorization();
+        _authContext = this.AddTestAuthorization();
     }
 
     [Fact]
     public void RendersEditButton_When_UserIsAuthorized()
     {
         // Arrange
-        authContext.SetAuthorized("Test User");
-        var testTrail = CreateTestTrail();
+        var authorizedUser = "Test User";
+        _authContext.SetAuthorized(authorizedUser);
+        var testTrail = _fixture.Create<Trail>();
+        testTrail.Owner = authorizedUser;
 
         // Act
         var cut = Render(@<TrailCard Trail="testTrail" />);
@@ -30,9 +33,10 @@
     public void RendersEditButton_When_UserIsAdmin()
     {
         // Arrange
-        authContext.SetAuthorized("Admin User");
-        authContext.SetRoles("Administrator");
-        var testTrail = CreateTestTrail();
+        var authorizedUser = "Admin User";
+        _authContext.SetAuthorized(authorizedUser);
+        _authContext.SetRoles("Administrator");
+        var testTrail = _fixture.Create<Trail>();
 
         // Act
         var cut = Render(@<TrailCard Trail="testTrail" />);
@@ -40,18 +44,5 @@
         // Assert
         var editButton = cut.Find("button[title=\"Edit\"]");
         Assert.NotNull(editButton);
-    }
-
-    private Trail CreateTestTrail()
-    {
-        return new Trail
-        {
-                Id = 1,
-                Name = "Test Trail",
-                Location = "Test Location",
-                TimeInMinutes = 60,
-                Length = 10,
-                Owner = "Test User"
-        };
     }
 }

@@ -2,6 +2,8 @@
 
 @code 
 {
+    private readonly Fixture _fixture = new();
+
     public FavoriteButtonTests()
     {
         this.AddBlazoredLocalStorage();
@@ -12,10 +14,7 @@
     public void RendersAddFavoriteButton_When_TrailIsNotFavorited()
     {
         // Arrange
-        var testTrail = new Trail
-        {
-            Id = 1
-        };
+        var testTrail = _fixture.Create<Trail>();
 
         // Act
         var cut = Render(@<FavoriteButton Trail="testTrail" />);
@@ -32,35 +31,27 @@
     public async Task RendersRemoveFavoriteButton_When_TrailIsFavorited()
     {
         // Arrange
-        var testTrail = new Trail
-        {
-            Id = 1
-        };
+        var testTrail = _fixture.Create<Trail>();
 
         var appState = this.Services.GetService<AppState>();
         await appState.FavoriteTrailsState.AddFavorite(testTrail);
 
         // Act
-        var cut = Render(
-            @<FavoriteButton Trail="testTrail" />
-        );
+        var cut = Render(@<FavoriteButton Trail="testTrail" />);
 
         // Assert
         cut.MarkupMatches(
             @<button class="btn btn-outline-primary ml-1" title="Favorite">
                 <i class="bi bi-heart-fill"></i>
             </button>
-    );
+        );
     }
 
     [Fact]
     public void AddTrailToFavorites_When_TrailIsNotAFavorite()
     {
         // Arrange
-        var testTrail = new Trail
-        {
-            Id = 1
-        };
+        var testTrail = _fixture.Create<Trail>();
         var cut = Render(@<FavoriteButton Trail="testTrail" />);
         var button = cut.Find("button");
 
@@ -76,10 +67,7 @@
     public async Task RemoveTrailFromFavorites_When_TrailIsFavorite()
     {
         // Arrange
-        var testTrail = new Trail
-        {
-            Id = 1
-        };
+        var testTrail = _fixture.Create<Trail>();
         var appState = this.Services.GetService<AppState>();
         await appState.FavoriteTrailsState.AddFavorite(testTrail);
         var cut = Render(@<FavoriteButton Trail="testTrail" />);

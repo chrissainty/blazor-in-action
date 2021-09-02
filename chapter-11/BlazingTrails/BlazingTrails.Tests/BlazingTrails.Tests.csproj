@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoFixture" Version="4.17.0" />
     <PackageReference Include="Blazored.LocalStorage.TestExtensions" Version="4.1.5" />
     <PackageReference Include="bunit" Version="1.2.49" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
