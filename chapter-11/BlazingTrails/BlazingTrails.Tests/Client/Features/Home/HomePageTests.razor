@@ -1,0 +1,32 @@
+﻿@using BlazingTrails.Client.Features.Home
+@inherits TestContext
+
+@code {
+    public HomePageTests()
+    {
+        this.AddBlazoredLocalStorage();
+        this.AddTestAuthorization();
+        this.Services.AddScoped<AppState>();
+        this.Services.AddMediatR(typeof(HomePageTests).Assembly);
+    }
+
+    [Fact]
+    public void RendersTrailDetails_When_TrailSelected()
+    {
+        // Arrange
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        var cut = Render(@<HomePage />);
+        var trailCards = cut.FindComponents<TrailCard>();
+        var viewButton = trailCards[0].Find("button[title=\"View\"]");
+
+        // Act
+        viewButton.Click();
+
+        // Assert
+        var trailDetails = cut.FindComponent<TrailDetails>();
+        
+        var isOpen = trailDetails.Find("div.drawer-wrapper.slide");
+        Assert.NotNull(isOpen);
+        Assert.Equal(trailCards[0].Instance.Trail.Name, trailDetails.Instance.Trail.Name);
+    }
+}
