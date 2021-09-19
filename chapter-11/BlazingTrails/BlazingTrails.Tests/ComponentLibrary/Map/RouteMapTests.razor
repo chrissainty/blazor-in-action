@@ -8,7 +8,7 @@
     public RouteMapTests()
     {
         _routeMapModule = JSInterop.SetupModule();
-        _routeMapModuleInitializeInvocation = _routeMapModule.SetupVoid("initialize", x => true).SetVoidResult();
+        _routeMapModuleInitializeInvocation = _routeMapModule.SetupVoid("initialize", _ => true).SetVoidResult();
     }
 
     [Fact]
@@ -26,7 +26,7 @@
     {
         // Arrange
         var latLongResult = new LatLong(1m, 2m);
-        var plannedInvocation = _routeMapModule.Setup<LatLong>("deleteLastWaypoint", x => true).SetResult(latLongResult);
+        var plannedInvocation = _routeMapModule.Setup<LatLong>("deleteLastWaypoint", _ => true).SetResult(latLongResult);
         var cut = Render(@<RouteMap />);
         var deleteWaypointButton = cut.Find("button[title=\"Delete last waypoint\"]");
 
