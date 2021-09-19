@@ -1,4 +1,3 @@
-﻿namespace BlazingTrails.ComponentLibrary.Map
-{
-    public record LatLong(decimal Lat, decimal Lng);
-}
+﻿namespace BlazingTrails.ComponentLibrary.Map;
+
+public record LatLong(decimal Lat, decimal Lng);

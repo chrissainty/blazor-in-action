@@ -2,7 +2,9 @@
 @inject IMediator Mediator
 @inject NavigationManager NavManager
 
-@if (_trails == null)
+<PageTitle>Blazing Trails</PageTitle>
+
+@if (_isLoading)
 {
     <p>Loading trails...</p>
 }
@@ -45,12 +47,12 @@ else
                 <td>@trail.TimeFormatted</td>
                 <td class="text-right">
                     <AuthorizeView>
-                        @if (trail.Owner.Equals(context.User.Identity.Name, StringComparison.CurrentCultureIgnoreCase) || context.User.IsInRole("Administrator"))
-                                {
+                        @if (trail.Owner.Equals(context.User?.Identity?.Name, StringComparison.CurrentCultureIgnoreCase) || (context.User?.IsInRole("Administrator") ?? false))
+                        {
                             <button @onclick="@(() => NavManager.NavigateTo($"/edit-trail/{trail.Id}"))" title="Edit" class="btn btn-outline-secondary">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                                }
+                        }
                     </AuthorizeView>
                     <FavoriteButton Trail="trail" />
                     <button @onclick="@(() => HandleTrailSelected(trail))" title="View" class="btn btn-primary">
@@ -69,31 +71,30 @@ else
 }
 
 @code {
-    private IEnumerable<Trail> _trails;
+    private bool _isLoading;
+    private IEnumerable<Trail> _trails = Array.Empty<Trail>();
     private Trail? _selectedTrail;
 
     protected override async Task OnInitializedAsync()
     {
-        try
+        _isLoading = true;
+        var response = await Mediator.Send(new GetTrailsRequest());
+        if (response is not null)
         {
-            var response = await Mediator.Send(new GetTrailsRequest());
-            _trails = response.Trails.Select(_ => new Trail
-            {
-                Id = _.Id,
-                Name = _.Name,
-                Image = _.Image,
-                Description = _.Description,
-                Location = _.Location,
-                Length = _.Length,
-                TimeInMinutes = _.TimeInMinutes,
-                Owner = _.Owner,
-                Waypoints = _.Waypoints.Select(_ => new BlazingTrails.ComponentLibrary.Map.LatLong(_.Latitude, _.Longitude))?.ToList()
-            });
+            _trails = response.Trails.Select(x => new Trail
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Image = x.Image,
+                    Description = x.Description,
+                    Location = x.Location,
+                    Length = x.Length,
+                    TimeInMinutes = x.TimeInMinutes,
+                    Owner = x.Owner,
+                    Waypoints = x.Waypoints.Select(wp => new BlazingTrails.ComponentLibrary.Map.LatLong(wp.Latitude, wp.Longitude))?.ToList() ?? new List<ComponentLibrary.Map.LatLong>()
+                });
         }
-        catch (HttpRequestException ex)
-        {
-            Console.WriteLine($"There was a problem loading trail data: {ex.Message}");
-        }
+        _isLoading = false;
     }
 
     private void HandleTrailSelected(Trail trail)

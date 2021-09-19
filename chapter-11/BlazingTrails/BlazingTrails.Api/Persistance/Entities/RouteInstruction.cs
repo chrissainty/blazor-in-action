@@ -1,24 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BlazingTrails.Api.Persistance.Entities
+namespace BlazingTrails.Api.Persistance.Entities;
+
+public class RouteInstruction
 {
-    public class RouteInstruction
-    {
-        public int Id { get; set; }
-        public int TrailId { get; set; }
-        public int Stage { get; set; }
-        public string Description { get; set; }
+    public int Id { get; set; }
+    public int TrailId { get; set; }
+    public int Stage { get; set; }
+    public string Description { get; set; } = null!;
 
-        public Trail Trail { get; set; }
-    }
+    public Trail Trail { get; set; } = null!;
+}
 
-    public class RouteInstructionConfig : IEntityTypeConfiguration<RouteInstruction>
+public class RouteInstructionConfig : IEntityTypeConfiguration<RouteInstruction>
+{
+    public void Configure(EntityTypeBuilder<RouteInstruction> builder)
     {
-        public void Configure(EntityTypeBuilder<RouteInstruction> builder)
-        {
-            builder.Property(_ => _.TrailId).IsRequired();
-            builder.Property(_ => _.Description).IsRequired();
-        }
+        builder.Property(x => x.TrailId).IsRequired();
+        builder.Property(x => x.Description).IsRequired();
     }
 }

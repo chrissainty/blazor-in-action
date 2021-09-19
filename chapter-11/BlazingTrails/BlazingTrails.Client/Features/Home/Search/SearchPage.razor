@@ -1,7 +1,8 @@
 ﻿@page "/search/{SearchTerm}"
-@implements IDisposable
 @inject IMediator Mediator
 @inject NavigationManager NavManager
+
+<PageTitle>Search Trails - Blazing Trails</PageTitle>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -14,7 +15,7 @@
 
 <SearchFilter SearchTerm="@SearchTerm" />
 
-@if (_searchResults == null)
+@if (_isLoading)
 {
     <p>Loading search results...</p>
 }
@@ -33,58 +34,65 @@ else
 }
 
 @code {
-    private IEnumerable<Trail> _searchResults;
-    private IEnumerable<Trail> _cachedSearchResults;
+    private bool _isLoading;
+    private IEnumerable<Trail> _searchResults = Array.Empty<Trail>();
+    private IEnumerable<Trail> _cachedSearchResults = Array.Empty<Trail>();
     private Trail? _selectedTrail;
 
-    [Parameter] public string SearchTerm { get; set; }
+    [Parameter] public string? SearchTerm { get; set; }
+    [Parameter, SupplyParameterFromQuery] public int MaxLength { get; set; }
+    [Parameter, SupplyParameterFromQuery] public int MaxTime { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
+            _isLoading = true;
+
             var response = await Mediator.Send(new GetTrailsRequest());
-            var allTrails = response.Trails.Select(_ => new Trail
+            var allTrails = response.Trails.Select(x => new Trail
             {
-                Id = _.Id,
-                Name = _.Name,
-                Image = _.Image,
-                Description = _.Description,
-                Location = _.Location,
-                Length = _.Length,
-                TimeInMinutes = _.TimeInMinutes,
-                Owner = _.Owner
+                Id = x.Id,
+                Name = x.Name,
+                Image = x.Image,
+                Description = x.Description,
+                Location = x.Location,
+                Length = x.Length,
+                TimeInMinutes = x.TimeInMinutes,
+                Owner = x.Owner
             });
 
-            _searchResults = allTrails.Where(_ => _.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase)
-                                           || _.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
+            _searchResults = allTrails.Where(x => x.Name.Contains(SearchTerm ?? "", StringComparison.CurrentCultureIgnoreCase)
+                                           || x.Location.Contains(SearchTerm ?? "", StringComparison.CurrentCultureIgnoreCase));
             _cachedSearchResults = _searchResults;
-            NavManager.LocationChanged += HandleLocationChanged;
+
             UpdateFilters();
         }
         catch (HttpRequestException ex)
         {
             Console.WriteLine($"There was a problem loading trail data: {ex.Message}");
         }
+        finally
+        {
+            _isLoading = false;
+        }
     }
 
-    private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
+    protected override void OnParametersSet()
         => UpdateFilters();
 
     private void UpdateFilters()
     {
         var filters = new List<Func<Trail, bool>>();
-        NavManager.TryGetQueryString<int>("maxlength", out var maxLength);
-        NavManager.TryGetQueryString<int>("maxtime", out var maxTime);
 
-        if (maxLength > 0)
+        if (MaxLength > 0)
         {
-            filters.Add(_ => _.Length <= maxLength);
+            filters.Add(x => x.Length <= MaxLength);
         }
 
-        if (maxTime > 0)
+        if (MaxTime > 0)
         {
-            filters.Add(_ => _.TimeInMinutes <= maxTime * 60);
+            filters.Add(x => x.TimeInMinutes <= MaxTime * 60);
         }
 
         if (filters.Any())
@@ -98,9 +106,6 @@ else
 
         StateHasChanged();
     }
-
-    public void Dispose()
-        => NavManager.LocationChanged -= HandleLocationChanged;
 
     private void HandleTrailSelected(Trail trail)
         => _selectedTrail = trail;

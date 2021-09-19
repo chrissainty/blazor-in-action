@@ -6,7 +6,6 @@
 
     <FormSection Title="Basic Details"
                  HelpText="This information is used to identify the trail and can be searched to help hikers find it.">
-
         <FormFieldSet Width="col-6">
             <label for="trailName" class="font-weight-bold text-secondary">Name</label>
             <InputText @bind-Value="_trail.Name" class="form-control" id="trailName" />
@@ -41,13 +40,10 @@
                 </div>
             }
         </FormFieldSet>
-
-
     </FormSection>
 
     <FormSection Title="Difficulty"
                  HelpText="Help other hikers out by telling them the length of the trail is how long it might take them.">
-
         <FormFieldSet Width="col-3">
             <label for="trailLength" class="font-weight-bold text-secondary">Length (km)</label>
             <InputNumber @bind-Value="_trail.Length" class="form-control" id="trailLength" />
@@ -59,7 +55,6 @@
             <InputTime @bind-Value="_trail.TimeInMinutes" id="trailTime" />
             <ValidationMessage For="@(() => _trail.TimeInMinutes)" />
         </FormFieldSet>
-
     </FormSection>
 
     <FormSection Title="Route"
@@ -80,11 +75,11 @@
 
 @code {
     private TrailDto _trail = new TrailDto();
-    private IBrowserFile trailImage;
-    private EditContext _editContext;
+    private IBrowserFile? trailImage;
+    private EditContext? _editContext;
 
-    [Parameter] public Func<TrailDto, IBrowserFile, Task> OnSubmit { get; set; }
-    [Parameter] public TrailDto Trail { get; set; }
+    [Parameter, EditorRequired] public Func<TrailDto, IBrowserFile?, Task> OnSubmit { get; set; } = null!;
+    [Parameter] public TrailDto? Trail { get; set; }
 
 
     public void ResetForm()
@@ -110,7 +105,7 @@
             _trail.TimeInMinutes = Trail.TimeInMinutes;
 
             _trail.Waypoints.Clear();
-            _trail.Waypoints.AddRange(Trail.Waypoints.Select(_ => new TrailDto.WaypointDto(_.Latitude, _.Longitude)));
+            _trail.Waypoints.AddRange(Trail.Waypoints.Select(x => new TrailDto.WaypointDto(x.Latitude, x.Longitude)));
 
             _editContext = new EditContext(_trail);
         }
@@ -136,6 +131,7 @@
         _trail.ImageAction = ImageAction.Remove;
     }
 
-    private async Task SubmitForm() => await OnSubmit(_trail, trailImage);
+    private async Task SubmitForm() 
+        => await OnSubmit(_trail, trailImage);
 
 }

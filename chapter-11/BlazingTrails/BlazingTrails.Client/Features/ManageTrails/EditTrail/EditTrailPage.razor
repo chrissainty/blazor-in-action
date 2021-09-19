@@ -2,6 +2,8 @@
 @attribute [Authorize]
 @inject IMediator Mediator
 
+<PageTitle>Edit Trail - Blazing Trails</PageTitle>
+
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -52,7 +54,7 @@ else
             _trail.Image = response.Trail.Image;
             _trail.Length = response.Trail.Length;
             _trail.TimeInMinutes = response.Trail.TimeInMinutes;
-            _trail.Waypoints.AddRange(response.Trail.Waypoints.Select(_ => new TrailDto.WaypointDto(_.Latitude, _.Longitude)));
+            _trail.Waypoints.AddRange(response.Trail.Waypoints.Select(x => new TrailDto.WaypointDto(x.Latitude, x.Longitude)));
         }
         else
         {
@@ -78,7 +80,7 @@ else
             _trail.Length = trail.Length;
             _trail.TimeInMinutes = trail.TimeInMinutes;
             _trail.Waypoints.Clear();
-            _trail.Waypoints.AddRange(trail.Waypoints.Select(_ => new TrailDto.WaypointDto(_.Latitude, _.Longitude)));
+            _trail.Waypoints.AddRange(trail.Waypoints.Select(x => new TrailDto.WaypointDto(x.Latitude, x.Longitude)));
 
             _submitSuccessful = true;
 

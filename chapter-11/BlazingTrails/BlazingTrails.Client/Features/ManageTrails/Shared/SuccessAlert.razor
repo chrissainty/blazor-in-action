@@ -6,5 +6,5 @@
 </div>
 
 @code {
-    [Parameter] public string Message { get; set; }
+    [Parameter, EditorRequired] public string Message { get; set; } = null!;
 }

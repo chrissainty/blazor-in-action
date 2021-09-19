@@ -25,30 +25,17 @@
     private int _maxLength;
     private int _maxTime;
 
-    [Parameter] public string SearchTerm { get; set; }
-
-    protected override void OnInitialized()
-    {
-        NavManager.TryGetQueryString<int>("maxlength", out _maxLength);
-        NavManager.TryGetQueryString<int>("maxtime", out _maxTime);
-    }
+    [Parameter] public string SearchTerm { get; set; } = null!;
 
     private void FilterSearchResults()
     {
-        var queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
-
-        if (_maxLength > 0)
-            queryString.Add("maxlength", _maxLength.ToString());
-
-        if (_maxTime > 0)
-            queryString.Add("maxtime", _maxTime.ToString());
-
-        if (string.IsNullOrWhiteSpace(queryString.ToString()))
+        var uriWithQuerystring = NavManager.GetUriWithQueryParameters(new Dictionary<string, object?>()
         {
-            return;
-        }
+            [nameof(SearchPage.MaxLength)] = _maxLength == 0 ? null : _maxLength,
+            [nameof(SearchPage.MaxTime)] = _maxTime == 0 ? null : _maxTime
+        });
 
-        NavManager.NavigateTo($"/search/{SearchTerm}?{queryString.ToString()}");
+        NavManager.NavigateTo(uriWithQuerystring);
     }
 
     private void ClearSearchFilter()

@@ -22,7 +22,7 @@
         testTrail.Owner = authorizedUser;
 
         // Act
-        var cut = Render(@<TrailCard Trail="testTrail" />);
+        var cut = Render(@<TrailCard Trail="testTrail" OnSelected="@(() => new Trail())" />);
 
         // Assert
         var editButton = cut.Find("button[title=\"Edit\"]");
@@ -39,7 +39,7 @@
         var testTrail = _fixture.Create<Trail>();
 
         // Act
-        var cut = Render(@<TrailCard Trail="testTrail" />);
+        var cut = Render(@<TrailCard Trail="testTrail" OnSelected="@(() => new Trail())" />);
 
         // Assert
         var editButton = cut.Find("button[title=\"Edit\"]");

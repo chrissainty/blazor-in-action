@@ -1,34 +1,31 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BlazingTrails.Api.Persistance.Entities
+namespace BlazingTrails.Api.Persistance.Entities;
+
+public class Trail
 {
-    public class Trail
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Image { get; set; }
-        public string Location { get; set; }
-        public int TimeInMinutes { get; set; }
-        public int Length { get; set; }
-        public bool IsFavourite { get; set; }
-        public string Owner { get; set; }
+    public int Id { get; set; }
+    public string Name { get; set; } = null!;
+    public string Description { get; set; } = null!;
+    public string Image { get; set; } = null!;
+    public string Location { get; set; } = null!;
+    public int TimeInMinutes { get; set; }
+    public int Length { get; set; }
+    public bool IsFavourite { get; set; }
+    public string Owner { get; set; } = null!;
 
-        public ICollection<Waypoint> Waypoints { get; set; }
-    }
+    public ICollection<Waypoint> Waypoints { get; set; } = null!;
+}
 
-    public class TrailConfig : IEntityTypeConfiguration<Trail>
+public class TrailConfig : IEntityTypeConfiguration<Trail>
+{
+    public void Configure(EntityTypeBuilder<Trail> builder)
     {
-        public void Configure(EntityTypeBuilder<Trail> builder)
-        {
-            builder.Property(_ => _.Name).IsRequired();
-            builder.Property(_ => _.Description).IsRequired();
-            builder.Property(_ => _.Location).IsRequired();
-            builder.Property(_ => _.TimeInMinutes).IsRequired();
-            builder.Property(_ => _.Length).IsRequired();
-            builder.Property(_ => _.Owner).IsRequired();
-        }
+        builder.Property(x => x.Name).IsRequired();
+        builder.Property(x => x.Description).IsRequired();
+        builder.Property(x => x.Location).IsRequired();
+        builder.Property(x => x.TimeInMinutes).IsRequired();
+        builder.Property(x => x.Length).IsRequired();
+        builder.Property(x => x.Owner).IsRequired();
     }
 }
