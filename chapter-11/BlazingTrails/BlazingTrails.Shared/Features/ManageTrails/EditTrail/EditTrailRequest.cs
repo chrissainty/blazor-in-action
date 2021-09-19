@@ -15,6 +15,6 @@ public class EditTrailRequestValidator : AbstractValidator<EditTrailRequest>
 {
     public EditTrailRequestValidator()
     {
-        RuleFor(_ => _.Trail).SetValidator(new TrailValidator());
+        RuleFor(x => x.Trail).SetValidator(new TrailValidator());
     }
 }

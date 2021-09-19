@@ -44,7 +44,7 @@ public class UploadTrailImageEndpoint : BaseAsyncEndpoint.WithRequest<int>.WithR
         };
 
         using var image = Image.Load(file.OpenReadStream());
-        image.Mutate(_ => _.Resize(resizeOptions));
+        image.Mutate(x => x.Resize(resizeOptions));
         await image.SaveAsJpegAsync(saveLocation, cancellationToken: cancellationToken);
 
         if (!string.IsNullOrWhiteSpace(trail.Image))

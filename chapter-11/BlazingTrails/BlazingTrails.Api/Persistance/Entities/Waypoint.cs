@@ -16,8 +16,8 @@ public class WaypointConfig : IEntityTypeConfiguration<Waypoint>
 {
     public void Configure(EntityTypeBuilder<Waypoint> builder)
     {
-        builder.Property(_ => _.TrailId).IsRequired();
-        builder.Property(_ => _.Latitude).IsRequired();
-        builder.Property(_ => _.Longitude).IsRequired();
+        builder.Property(x => x.TrailId).IsRequired();
+        builder.Property(x => x.Latitude).IsRequired();
+        builder.Property(x => x.Longitude).IsRequired();
     }
 }
