@@ -11,16 +11,13 @@ else
     <div class="grid">
         @foreach (var trail in _trails)
         {
-            <div class="col mb-4">
-                <TrailCard Trail="trail" OnSelected="HandleTrailSelected" />
-            </div>
-
+            <TrailCard Trail="trail" OnSelected="HandleTrailSelected" />
         }
     </div>
 }
 
 @code {
-    private IEnumerable<Trail> _trails;
+    private IEnumerable<Trail>? _trails;
     private Trail? _selectedTrail;
 
     protected override async Task OnInitializedAsync()

@@ -30,6 +30,10 @@
 		<None Update="**/*.css" Watch="false" />
 	</ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\css\bootstrap\" />
+  </ItemGroup>
+
   <Target Name="CheckForNpm" BeforeTargets="RunNpmInstall">
     <Exec Command="npm --version" ContinueOnError="true">
       <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
