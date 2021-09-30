@@ -1,43 +1,39 @@
 ﻿using Ardalis.ApiEndpoints;
-using BlazingTrails.Api.Persistance;
+using BlazingTrails.Api.Persistence;
 using BlazingTrails.Shared.Features.ManageTrails.EditTrail;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace BlazingTrails.Api.Features.ManageTrails.EditTrail
+namespace BlazingTrails.Api.Features.ManageTrails.EditTrail;
+
+public class GetTrailEndpoint : BaseAsyncEndpoint.WithRequest<int>.WithResponse<GetTrailRequest.Response>
 {
-    public class GetTrailEndpoint : BaseAsyncEndpoint<int, GetTrailRequest.Response>
+    private readonly BlazingTrailsContext _context;
+
+    public GetTrailEndpoint(BlazingTrailsContext context)
     {
-        private readonly BlazingTrailsContext _context;
+        _context = context;
+    }
 
-        public GetTrailEndpoint(BlazingTrailsContext context)
+    [HttpGet(GetTrailRequest.RouteTemplate)]
+    public override async Task<ActionResult<GetTrailRequest.Response>> HandleAsync(int trailId, CancellationToken cancellationToken = default)
+    {
+        var trail = await _context.Trails.Include(x => x.Route).SingleOrDefaultAsync(x => x.Id == trailId, cancellationToken: cancellationToken);
+
+        if (trail is null)
         {
-            _context = context;
+            return BadRequest("Trail could not be found.");
         }
 
-        [HttpGet(GetTrailRequest.RouteTemplate)]
-        public override async Task<ActionResult<GetTrailRequest.Response>> HandleAsync(int trailId, CancellationToken cancellationToken = default)
-        {
-            var trail = await _context.Trails.Include(_ => _.Route).SingleOrDefaultAsync(_ => _.Id == trailId, cancellationToken: cancellationToken);
+        var response = new GetTrailRequest.Response(new GetTrailRequest.Trail(trail.Id,
+            trail.Name,
+            trail.Location,
+            trail.Image,
+            trail.TimeInMinutes,
+            trail.Length,
+            trail.Description,
+            trail.Route.Select(ri => new GetTrailRequest.RouteInstruction(ri.Id, ri.Stage, ri.Description))));
 
-            if (trail is null)
-            {
-                return BadRequest("Trail could not be found.");
-            }
-
-            var response = new GetTrailRequest.Response(new GetTrailRequest.Trail(trail.Id,
-                trail.Name,
-                trail.Location,
-                trail.Image,
-                trail.TimeInMinutes,
-                trail.Length,
-                trail.Description,
-                trail.Route.Select(_ => new GetTrailRequest.RouteInstruction(_.Id, _.Stage, _.Description))));
-
-            return Ok(response);
-        }
+        return Ok(response);
     }
 }

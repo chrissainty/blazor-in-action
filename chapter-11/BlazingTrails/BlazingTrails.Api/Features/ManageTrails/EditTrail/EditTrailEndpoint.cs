@@ -1,4 +1,5 @@
 ﻿using BlazingTrails.Api.Persistance.Entities;
+using BlazingTrails.Api.Persistence;
 using BlazingTrails.Shared.Features.ManageTrails.EditTrail;
 using BlazingTrails.Shared.Features.ManageTrails.Shared;
 
@@ -42,7 +43,7 @@ public class EditTrailEndpoint : BaseAsyncEndpoint.WithRequest<EditTrailRequest>
 
         if (request.Trail.ImageAction == ImageAction.Remove)
         {
-            System.IO.File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "Images", trail.Image));
+            System.IO.File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "Images", trail.Image!));
             trail.Image = "";
         }
 

@@ -1,13 +1,10 @@
 ﻿using BlazingTrails.Shared.Features.Home.Shared;
 using MediatR;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BlazingTrails.Client.Features.Home.Shared
 {
-    public class GetTrailsHandler : IRequestHandler<GetTrailsRequest, GetTrailsRequest.Response>
+    public class GetTrailsHandler : IRequestHandler<GetTrailsRequest, GetTrailsRequest.Response?>
     {
         private readonly HttpClient _httpClient;
 
@@ -16,7 +13,7 @@ namespace BlazingTrails.Client.Features.Home.Shared
             _httpClient = httpClient;
         }
 
-        public async Task<GetTrailsRequest.Response> Handle(GetTrailsRequest request, CancellationToken cancellationToken)
+        public async Task<GetTrailsRequest.Response?> Handle(GetTrailsRequest request, CancellationToken cancellationToken)
         {
             try
             {
@@ -24,7 +21,7 @@ namespace BlazingTrails.Client.Features.Home.Shared
             }
             catch (HttpRequestException)
             {
-                return new GetTrailsRequest.Response(null);
+                return default!;
             }
         }
     }

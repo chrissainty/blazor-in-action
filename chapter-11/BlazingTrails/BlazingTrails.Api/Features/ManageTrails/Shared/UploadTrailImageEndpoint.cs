@@ -1,4 +1,5 @@
-﻿using BlazingTrails.Shared.Features.ManageTrails.Shared;
+﻿using BlazingTrails.Api.Persistence;
+using BlazingTrails.Shared.Features.ManageTrails.Shared;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 

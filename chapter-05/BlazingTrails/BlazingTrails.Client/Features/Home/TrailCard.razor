@@ -16,9 +16,6 @@
 </div>
 
 @code {
-    [Parameter] public Trail Trail { get; set; }
-    [Parameter] public EventCallback<Trail> OnSelected { get; set; }
-
-    private void UpdateTrail() 
-        => NavManager.NavigateTo($"/update-trail/{Trail.Id}");
+    [Parameter, EditorRequired] public Trail Trail { get; set; } = default!;
+    [Parameter, EditorRequired] public EventCallback<Trail> OnSelected { get; set; }
 }

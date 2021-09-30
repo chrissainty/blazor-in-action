@@ -2,6 +2,8 @@
 @page "/search/{SearchTerm}/maxlength/{MaxLength:int}"
 @inject HttpClient Http
 
+<PageTitle>Search Trails - Blazing Trails</PageTitle>
+
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -22,21 +24,19 @@ else
     <TrailDetails Trail="_selectedTrail" />
 
     <div class="grid">
-
         @foreach (var trail in _searchResults)
         {
             <TrailCard Trail="trail" OnSelected="HandleTrailSelected" />
         }
-
     </div>
 }
 
 @code {
-    private IEnumerable<Trail> _searchResults;
-    private IEnumerable<Trail> _cachedSearchResults;
+    private IEnumerable<Trail>? _searchResults;
+    private IEnumerable<Trail> _cachedSearchResults = Array.Empty<Trail>();
     private Trail? _selectedTrail;
 
-    [Parameter] public string SearchTerm { get; set; }
+    [Parameter] public string SearchTerm { get; set; } = default!;
     [Parameter] public int? MaxLength { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -44,8 +44,8 @@ else
         try
         {
             var allTrails = await Http.GetFromJsonAsync<IEnumerable<Trail>>("trails/trail-data.json");
-            _searchResults = allTrails.Where(_ => _.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase)
-                                               || _.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
+            _searchResults = allTrails!.Where(x => x.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase)
+                                            || x.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
             _cachedSearchResults = _searchResults;
         }
         catch (HttpRequestException ex)
@@ -58,7 +58,7 @@ else
     {
         if (_cachedSearchResults.Any() && MaxLength.HasValue)
         {
-            _searchResults = _cachedSearchResults.Where(_ => _.Length <= MaxLength.Value);
+            _searchResults = _cachedSearchResults.Where(x => x.Length <= MaxLength.Value);
         }
         else if (_cachedSearchResults.Any() && MaxLength is null)
         {

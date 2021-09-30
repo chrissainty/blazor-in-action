@@ -1,13 +1,10 @@
 ﻿using BlazingTrails.Shared.Features.ManageTrails.AddTrail;
 using MediatR;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace BlazingTrails.Client.Features.ManageTrails.AddTrail
-{
-    public class AddTrailHandler : IRequestHandler<AddTrailRequest, AddTrailRequest.Response>
+namespace BlazingTrails.Client.Features.ManageTrails.AddTrail;
+
+public class AddTrailHandler : IRequestHandler<AddTrailRequest, AddTrailRequest.Response>
     {
         private readonly HttpClient _httpClient;
 
@@ -31,4 +28,3 @@ namespace BlazingTrails.Client.Features.ManageTrails.AddTrail
             }
         }
     }
-}

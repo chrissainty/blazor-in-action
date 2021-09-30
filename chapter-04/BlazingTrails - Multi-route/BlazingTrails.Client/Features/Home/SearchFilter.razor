@@ -19,7 +19,7 @@
 @code {
     private int _maxLength;
 
-    [Parameter] public string SearchTerm { get; set; }
+    [Parameter, EditorRequired] public string SearchTerm { get; set; } = default!;
 
     private void FilterSearchResults() 
         => NavManager.NavigateTo($"/search/{SearchTerm}/maxlength/{_maxLength}");

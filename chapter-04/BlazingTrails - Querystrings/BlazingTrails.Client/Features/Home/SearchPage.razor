@@ -1,7 +1,7 @@
 ﻿@page "/search/{SearchTerm}"
-@implements IDisposable
 @inject HttpClient Http
-@inject NavigationManager NavManager
+
+<PageTitle>Search Trails - Blazing Trails</PageTitle>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -23,32 +23,30 @@ else
     <TrailDetails Trail="_selectedTrail" />
 
     <div class="grid">
-
         @foreach (var trail in _searchResults)
         {
             <TrailCard Trail="trail" OnSelected="HandleTrailSelected" />
         }
-
     </div>
 }
 
 @code {
-    private IEnumerable<Trail> _searchResults;
-    private IEnumerable<Trail> _cachedSearchResults;
+    private IEnumerable<Trail>? _searchResults;
+    private IEnumerable<Trail> _cachedSearchResults = Array.Empty<Trail>();
     private Trail? _selectedTrail;
 
-    [Parameter] public string SearchTerm { get; set; }
+    [Parameter] public string SearchTerm { get; set; } = default!;
+    [Parameter, SupplyParameterFromQuery] public int? MaxLength { get; set; }
+    [Parameter, SupplyParameterFromQuery] public int? MaxTime { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             var allTrails = await Http.GetFromJsonAsync<IEnumerable<Trail>>("trails/trail-data.json");
-            _searchResults = allTrails.Where(_ => _.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase)
-                                               || _.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
+            _searchResults = allTrails!.Where(x => x.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase)
+                                               || x.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
             _cachedSearchResults = _searchResults;
-            NavManager.LocationChanged += HandleLocationChanged;
-            UpdateFilters();
         }
         catch (HttpRequestException ex)
         {
@@ -56,23 +54,21 @@ else
         }
     }
 
-    private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
+    protected override void OnParametersSet()
         => UpdateFilters();
 
     private void UpdateFilters()
     {
         var filters = new List<Func<Trail, bool>>();
-        NavManager.TryGetQueryString<int>("maxlength", out var maxLength);
-        NavManager.TryGetQueryString<int>("maxtime", out var maxTime);
 
-        if (maxLength > 0)
+        if (MaxLength is not null && MaxLength > 0)
         {
-            filters.Add(_ => _.Length <= maxLength);
+            filters.Add(_ => _.Length <= MaxLength);
         }
 
-        if (maxTime > 0)
+        if (MaxTime is not null && MaxTime > 0)
         {
-            filters.Add(_ => _.TimeInMinutes <= maxTime * 60);
+            filters.Add(_ => _.TimeInMinutes <= MaxTime * 60);
         }
 
         if (filters.Any())
@@ -83,12 +79,7 @@ else
         {
             _searchResults = _cachedSearchResults;
         }
-
-        StateHasChanged();
     }
-
-    public void Dispose()
-        => NavManager.LocationChanged -= HandleLocationChanged;
 
     private void HandleTrailSelected(Trail trail)
         => _selectedTrail = trail;

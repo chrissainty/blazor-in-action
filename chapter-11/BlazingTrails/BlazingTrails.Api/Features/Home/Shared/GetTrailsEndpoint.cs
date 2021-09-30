@@ -1,4 +1,5 @@
-﻿using BlazingTrails.Shared.Features.Home.Shared;
+﻿using BlazingTrails.Api.Persistence;
+using BlazingTrails.Shared.Features.Home.Shared;
 
 namespace BlazingTrails.Api.Features.Home.Shared;
 

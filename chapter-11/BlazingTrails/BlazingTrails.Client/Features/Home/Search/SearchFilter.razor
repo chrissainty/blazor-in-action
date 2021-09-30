@@ -25,7 +25,7 @@
     private int _maxLength;
     private int _maxTime;
 
-    [Parameter] public string SearchTerm { get; set; } = null!;
+    [Parameter, EditorRequired] public string SearchTerm { get; set; } = default!;
 
     private void FilterSearchResults()
     {

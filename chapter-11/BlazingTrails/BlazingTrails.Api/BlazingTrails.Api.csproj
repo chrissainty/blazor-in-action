@@ -21,8 +21,4 @@
     <ProjectReference Include="..\BlazingTrails.Client\BlazingTrails.Client.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Persistance\Data\Migrations\" />
-  </ItemGroup>
-
 </Project>
