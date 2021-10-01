@@ -2,7 +2,7 @@
 
 namespace BlazingTrails.Client.State;
 
-public class AddTrailState
+public class NewTrailState
 {
     private TrailDto _unsavedNewTrail = new();
 

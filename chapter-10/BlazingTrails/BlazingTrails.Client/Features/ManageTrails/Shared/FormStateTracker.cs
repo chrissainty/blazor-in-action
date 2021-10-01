@@ -5,17 +5,17 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace BlazingTrails.Client.Features.ManageTrails.Shared;
 
-public class RecordFormState : ComponentBase
+public class FormStateTracker : ComponentBase
 {
-    [Inject] public AppState AppState { get; set; } = null!;
+    [Inject] public AppState AppState { get; set; } = default!;
 
-    [CascadingParameter] private EditContext CascadedEditContext { get; set; } = null!;
+    [CascadingParameter] private EditContext CascadedEditContext { get; set; } = default!;
 
     protected override void OnInitialized()
     {
         if (CascadedEditContext is null)
         {
-            throw new InvalidOperationException($"{nameof(RecordFormState)} requires a cascading parameter of type {nameof(EditContext)}");
+            throw new InvalidOperationException($"{nameof(FormStateTracker)} requires a cascading parameter of type {nameof(EditContext)}");
         }
 
         CascadedEditContext.OnFieldChanged += CascadedEditContext_OnFieldChanged;
@@ -27,7 +27,7 @@ public class RecordFormState : ComponentBase
 
         if (trail.Id == 0)
         {
-            AppState.AddTrailState.SaveTrail(trail);
+            AppState.NewTrailState.SaveTrail(trail);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿@page "/search/{SearchTerm}"
 @inject IMediator Mediator
-@inject NavigationManager NavManager
 
 <PageTitle>Search Trails - Blazing Trails</PageTitle>
 
@@ -15,7 +14,7 @@
 
 <SearchFilter SearchTerm="@SearchTerm" />
 
-@if (_isLoading)
+@if (_searchResults == null)
 {
     <p>Loading search results...</p>
 }
@@ -34,12 +33,11 @@ else
 }
 
 @code {
-    private bool _isLoading;
-    private IEnumerable<Trail> _searchResults = Array.Empty<Trail>();
+    private IEnumerable<Trail>? _searchResults;
     private IEnumerable<Trail> _cachedSearchResults = Array.Empty<Trail>();
     private Trail? _selectedTrail;
 
-    [Parameter] public string? SearchTerm { get; set; }
+    [Parameter] public string SearchTerm { get; set; } = default!;
     [Parameter, SupplyParameterFromQuery] public int MaxLength { get; set; }
     [Parameter, SupplyParameterFromQuery] public int MaxTime { get; set; }
 
@@ -47,23 +45,22 @@ else
     {
         try
         {
-            _isLoading = true;
-
             var response = await Mediator.Send(new GetTrailsRequest());
             var allTrails = response.Trails.Select(x => new Trail
             {
                 Id = x.Id,
                 Name = x.Name,
-                Image = x.Image ?? "",
+                Image = x.Image,
                 Description = x.Description,
                 Location = x.Location,
                 Length = x.Length,
                 TimeInMinutes = x.TimeInMinutes,
-                Owner = x.Owner
+                Owner = x.Owner,
+                Waypoints = x.Waypoints.Select(wp => new BlazingTrails.ComponentLibrary.Map.LatLong(wp.Latitude, wp.Longitude))?.ToList() ?? new List<ComponentLibrary.Map.LatLong>()
             });
 
-            _searchResults = allTrails.Where(x => x.Name.Contains(SearchTerm ?? "", StringComparison.CurrentCultureIgnoreCase)
-                                           || x.Location.Contains(SearchTerm ?? "", StringComparison.CurrentCultureIgnoreCase));
+            _searchResults = allTrails.Where(x => x.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase)
+                                           || x.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
             _cachedSearchResults = _searchResults;
 
             UpdateFilters();
@@ -71,10 +68,6 @@ else
         catch (HttpRequestException ex)
         {
             Console.WriteLine($"There was a problem loading trail data: {ex.Message}");
-        }
-        finally
-        {
-            _isLoading = false;
         }
     }
 
@@ -103,8 +96,6 @@ else
         {
             _searchResults = _cachedSearchResults;
         }
-
-        StateHasChanged();
     }
 
     private void HandleTrailSelected(Trail trail)

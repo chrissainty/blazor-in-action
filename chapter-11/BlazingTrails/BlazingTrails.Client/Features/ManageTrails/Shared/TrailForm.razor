@@ -2,7 +2,7 @@
 
 <EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
     <FluentValidationValidator />
-    <RecordFormState />
+    <FormStateTracker />
 
     <FormSection Title="Basic Details"
                  HelpText="This information is used to identify the trail and can be searched to help hikers find it.">
@@ -84,7 +84,7 @@
 
     public void ResetForm()
     {
-        AppState.AddTrailState.ClearTrail();
+        AppState.NewTrailState.ClearTrail();
         _trail = new TrailDto();
         _editContext = new EditContext(_trail);
         _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
@@ -106,13 +106,10 @@
 
             _trail.Waypoints.Clear();
             _trail.Waypoints.AddRange(Trail.Waypoints.Select(x => new TrailDto.WaypointDto(x.Latitude, x.Longitude)));
-
-            _editContext = new EditContext(_trail);
         }
         else
         {
-            var newTrail = AppState.AddTrailState.GetTrail();
-            _editContext = new EditContext(newTrail);
+            _trail = AppState.NewTrailState.GetTrail();
         }
 
         _editContext = new EditContext(_trail);

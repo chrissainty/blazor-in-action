@@ -76,26 +76,28 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await Mediator.Send(new GetTrailsRequest());
-        if (response is not null)
+        try
         {
+            var response = await Mediator.Send(new GetTrailsRequest());
             _trails = response.Trails.Select(x => new Trail
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Image = x.Image,
-                    Description = x.Description,
-                    Location = x.Location,
-                    Length = x.Length,
-                    TimeInMinutes = x.TimeInMinutes,
-                    Owner = x.Owner,
-                    Waypoints = x.Waypoints.Select(wp => new BlazingTrails.ComponentLibrary.Map.LatLong(wp.Latitude, wp.Longitude))?.ToList() ?? new List<ComponentLibrary.Map.LatLong>()
-                });
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Image = x.Image,
+                Description = x.Description,
+                Location = x.Location,
+                Length = x.Length,
+                TimeInMinutes = x.TimeInMinutes,
+                Owner = x.Owner,
+                Waypoints = x.Waypoints.Select(wp => new BlazingTrails.ComponentLibrary.Map.LatLong(wp.Latitude, wp.Longitude))?.ToList() ?? new List<ComponentLibrary.Map.LatLong>()
+            });
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"There was a problem loading trail data: {ex.Message}");
         }
     }
 
     private void HandleTrailSelected(Trail trail)
-    {
-        _selectedTrail = trail;
-    }
+        => _selectedTrail = trail;
 }

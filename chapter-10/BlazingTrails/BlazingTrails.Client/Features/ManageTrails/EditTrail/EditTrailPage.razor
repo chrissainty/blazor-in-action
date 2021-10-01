@@ -2,6 +2,8 @@
 @attribute [Authorize]
 @inject IMediator Mediator
 
+<PageTitle>Edit Trail - Blazing Trails</PageTitle>
+
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -21,7 +23,7 @@ else
     {
         <SuccessAlert Message="Your trail has been edited successfully!" />
     }
-    else if (_errorMessage.Length > 0)
+    else if (_errorMessage is not null)
     {
         <ErrorAlert Message="@_errorMessage" />
     }
@@ -32,7 +34,7 @@ else
 @code {
     private bool _isLoading;
     private bool _submitSuccessful;
-    private string _errorMessage = "";
+    private string? _errorMessage;
     private TrailDto _trail = new TrailDto();
 
     [Parameter] public int TrailId { get; set; }
@@ -62,7 +64,7 @@ else
         _isLoading = false;
     }
 
-    private async Task SubmitEditTrail(TrailDto trail, IBrowserFile image)
+    private async Task SubmitEditTrail(TrailDto trail, IBrowserFile? image)
     {
         var response = await Mediator.Send(new EditTrailRequest(trail));
         if (!response.IsSuccess)
@@ -82,7 +84,7 @@ else
 
             _submitSuccessful = true;
 
-            if (trail.ImageAction == ImageAction.Add) _submitSuccessful = await ProcessImage(trail.Id, image);
+            if (trail.ImageAction == ImageAction.Add) _submitSuccessful = await ProcessImage(trail.Id, image!);
             if (trail.ImageAction == ImageAction.Remove) _trail.Image = "";
         }
 

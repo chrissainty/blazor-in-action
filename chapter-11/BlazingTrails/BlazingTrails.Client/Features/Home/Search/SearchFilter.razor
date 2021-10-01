@@ -26,6 +26,14 @@
     private int _maxTime;
 
     [Parameter, EditorRequired] public string SearchTerm { get; set; } = default!;
+    [Parameter, SupplyParameterFromQuery] public int? MaxLength { get; set; }
+    [Parameter, SupplyParameterFromQuery] public int? MaxTime { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _maxLength = MaxLength ?? 0;
+        _maxTime = MaxTime ?? 0;
+    }
 
     private void FilterSearchResults()
     {

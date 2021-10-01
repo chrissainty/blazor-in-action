@@ -1,6 +1,11 @@
-﻿using BlazingTrails.Api.Persistence;
+﻿using Ardalis.ApiEndpoints;
+using BlazingTrails.Api.Persistence;
+using BlazingTrails.Api.Persistence.Entities;
 using BlazingTrails.Shared.Features.ManageTrails.EditTrail;
 using BlazingTrails.Shared.Features.ManageTrails.Shared;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazingTrails.Api.Features.ManageTrails.EditTrail;
 

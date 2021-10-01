@@ -54,7 +54,9 @@ else
                 Description = x.Description,
                 Location = x.Location,
                 Length = x.Length,
-                TimeInMinutes = x.TimeInMinutes
+                TimeInMinutes = x.TimeInMinutes,
+                Owner = x.Owner,
+                Waypoints = x.Waypoints.Select(wp => new BlazingTrails.ComponentLibrary.Map.LatLong(wp.Latitude, wp.Longitude))?.ToList() ?? new List<ComponentLibrary.Map.LatLong>()
             });
 
             _searchResults = allTrails.Where(x => x.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase)

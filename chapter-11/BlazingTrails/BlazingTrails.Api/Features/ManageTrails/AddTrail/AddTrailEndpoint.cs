@@ -1,5 +1,9 @@
-﻿using BlazingTrails.Api.Persistence;
+﻿using Ardalis.ApiEndpoints;
+using BlazingTrails.Api.Persistence;
+using BlazingTrails.Api.Persistence.Entities;
 using BlazingTrails.Shared.Features.ManageTrails.AddTrail;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BlazingTrails.Api.Features.ManageTrails.AddTrail;
 
@@ -20,7 +24,6 @@ public class AddTrailEndpoint : BaseAsyncEndpoint.WithRequest<AddTrailRequest>.W
         {
             Name = request.Trail.Name,
             Description = request.Trail.Description,
-            Image = "",
             Location = request.Trail.Location,
             TimeInMinutes = request.Trail.TimeInMinutes,
             Length = request.Trail.Length,

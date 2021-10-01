@@ -14,7 +14,7 @@
         </button>
         <FavoriteButton Trail="Trail" />
         <AuthorizeView>
-            @if (Trail.Owner.Equals(context.User.Identity.Name, StringComparison.CurrentCultureIgnoreCase) || context.User.IsInRole("Administrator"))
+            @if (Trail.Owner.Equals(context.User.Identity?.Name, StringComparison.CurrentCultureIgnoreCase) || context.User.IsInRole("Administrator"))
             {
                 <button class="btn btn-outline-secondary float-right" title="Edit" @onclick="@(() => NavManager.NavigateTo($"/edit-trail/{Trail.Id}"))">
                     <i class="bi bi-pencil"></i>
@@ -25,6 +25,6 @@
 </div>
 
 @code {
-    [Parameter] public Trail Trail { get; set; }
-    [Parameter] public EventCallback<Trail> OnSelected { get; set; }
+    [Parameter, EditorRequired] public Trail Trail { get; set; } = null!;
+    [Parameter, EditorRequired] public EventCallback<Trail> OnSelected { get; set; }
 }

@@ -1,5 +1,9 @@
-﻿using BlazingTrails.Api.Persistence;
+﻿using Ardalis.ApiEndpoints;
+using BlazingTrails.Api.Persistence;
 using BlazingTrails.Shared.Features.ManageTrails.Shared;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 

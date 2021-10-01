@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace BlazingTrails.Api.Persistance.Data.Migrations
+#nullable disable
+
+namespace BlazingTrails.Api.Persistence.Data.Migrations
 {
     public partial class AddWaypoints : Migration
     {

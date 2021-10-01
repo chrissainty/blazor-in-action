@@ -2,11 +2,10 @@
 
 <EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
     <FluentValidationValidator />
-    <RecordFormState />
+    <FormStateTracker />
 
     <FormSection Title="Basic Details"
                  HelpText="This information is used to identify the trail and can be searched to help hikers find it.">
-
         <FormFieldSet Width="col-6">
             <label for="trailName" class="font-weight-bold text-secondary">Name</label>
             <InputText @bind-Value="_trail.Name" class="form-control" id="trailName" />
@@ -41,13 +40,10 @@
                 </div>
             }
         </FormFieldSet>
-
-
     </FormSection>
 
     <FormSection Title="Difficulty"
                  HelpText="Help other hikers out by telling them the length of the trail is how long it might take them.">
-
         <FormFieldSet Width="col-3">
             <label for="trailLength" class="font-weight-bold text-secondary">Length (km)</label>
             <InputNumber @bind-Value="_trail.Length" class="form-control" id="trailLength" />
@@ -59,7 +55,6 @@
             <InputTime @bind-Value="_trail.TimeInMinutes" id="trailTime" />
             <ValidationMessage For="@(() => _trail.TimeInMinutes)" />
         </FormFieldSet>
-
     </FormSection>
 
     <FormSection Title="Route"
@@ -80,20 +75,20 @@
 
 @code {
     private TrailDto _trail = new TrailDto();
-    private IBrowserFile trailImage;
-    private EditContext _editContext;
+    private IBrowserFile? _trailImage;
+    private EditContext _editContext = default!;
 
-    [Parameter] public Func<TrailDto, IBrowserFile, Task> OnSubmit { get; set; }
-    [Parameter] public TrailDto Trail { get; set; }
+    [Parameter, EditorRequired] public Func<TrailDto, IBrowserFile?, Task> OnSubmit { get; set; } = default!;
+    [Parameter] public TrailDto? Trail { get; set; }
 
 
     public void ResetForm()
     {
-        AppState.AddTrailState.ClearTrail();
+        AppState.NewTrailState.ClearTrail();
         _trail = new TrailDto();
         _editContext = new EditContext(_trail);
         _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
-        trailImage = null;
+        _trailImage = null;
     }
 
     protected override void OnParametersSet()
@@ -110,14 +105,11 @@
             _trail.TimeInMinutes = Trail.TimeInMinutes;
 
             _trail.Waypoints.Clear();
-            _trail.Waypoints.AddRange(Trail.Waypoints.Select(_ => new TrailDto.WaypointDto(_.Latitude, _.Longitude)));
-
-            _editContext = new EditContext(_trail);
+            _trail.Waypoints.AddRange(Trail.Waypoints.Select(x => new TrailDto.WaypointDto(x.Latitude, x.Longitude)));
         }
         else
         {
-            var newTrail = AppState.AddTrailState.GetTrail();
-            _editContext = new EditContext(newTrail);
+            _trail = AppState.NewTrailState.GetTrail();
         }
 
         _editContext = new EditContext(_trail);
@@ -126,16 +118,17 @@
 
     private void LoadTrailImage(InputFileChangeEventArgs e)
     {
-        trailImage = e.File;
+        _trailImage = e.File;
         _trail.ImageAction = ImageAction.Add;
     }
 
     private void RemoveTrailImage()
     {
-        _trail.Image = "";
+        _trail.Image = null;
         _trail.ImageAction = ImageAction.Remove;
     }
 
-    private async Task SubmitForm() => await OnSubmit(_trail, trailImage);
+    private async Task SubmitForm() 
+        => await OnSubmit(_trail, _trailImage);
 
 }

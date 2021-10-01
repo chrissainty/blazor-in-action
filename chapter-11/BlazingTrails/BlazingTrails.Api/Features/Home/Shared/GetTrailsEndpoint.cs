@@ -1,5 +1,8 @@
-﻿using BlazingTrails.Api.Persistence;
+﻿using Ardalis.ApiEndpoints;
+using BlazingTrails.Api.Persistence;
 using BlazingTrails.Shared.Features.Home.Shared;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazingTrails.Api.Features.Home.Shared;
 

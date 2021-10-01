@@ -6,12 +6,12 @@ public class AppState
 {
     private bool _isInitialized;
 
-    public AddTrailState AddTrailState { get; }
+    public NewTrailState NewTrailState { get; }
     public FavoriteTrailsState FavoriteTrailsState { get; }
 
     public AppState(ILocalStorageService localStorageService)
     {
-        AddTrailState = new AddTrailState();
+        NewTrailState = new NewTrailState();
         FavoriteTrailsState = new FavoriteTrailsState(localStorageService);
     }
 

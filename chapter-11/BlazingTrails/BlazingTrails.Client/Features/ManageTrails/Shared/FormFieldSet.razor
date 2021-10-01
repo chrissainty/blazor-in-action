@@ -8,5 +8,5 @@
 
 @code {
     [Parameter] public string Width { get; set; } = "col";
-    [Parameter, EditorRequired] public RenderFragment ChildContent { get; set; } = null!;
+    [Parameter, EditorRequired] public RenderFragment ChildContent { get; set; } = default!;
 }

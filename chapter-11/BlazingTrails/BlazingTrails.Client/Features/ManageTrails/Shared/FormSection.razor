@@ -14,7 +14,7 @@
 </div>
 
 @code {
-    [Parameter, EditorRequired] public string Title { get; set; } = null!;
-    [Parameter, EditorRequired] public string HelpText { get; set; } = null!;
-    [Parameter, EditorRequired] public RenderFragment ChildContent { get; set; } = null!;
+    [Parameter, EditorRequired] public string Title { get; set; } = default!;
+    [Parameter, EditorRequired] public string HelpText { get; set; } = default!;
+    [Parameter, EditorRequired] public RenderFragment ChildContent { get; set; } = default!;
 }
