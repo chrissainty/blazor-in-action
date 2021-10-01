@@ -1,38 +1,34 @@
 ﻿using BlazingTrails.Shared.Features.ManageTrails.Shared;
 using MediatR;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace BlazingTrails.Client.Features.ManageTrails.Shared
+namespace BlazingTrails.Client.Features.ManageTrails.Shared;
+
+public class UploadTrailImageHandler : IRequestHandler<UploadTrailImageRequest, UploadTrailImageRequest.Response>
 {
-    public class UploadTrailImageHandler : IRequestHandler<UploadTrailImageRequest, UploadTrailImageRequest.Response>
+    private readonly HttpClient _httpClient;
+
+    public UploadTrailImageHandler(HttpClient httpClient)
     {
-        private readonly HttpClient _httpClient;
+        _httpClient = httpClient;
+    }
 
-        public UploadTrailImageHandler(HttpClient httpClient)
+    public async Task<UploadTrailImageRequest.Response> Handle(UploadTrailImageRequest request, CancellationToken cancellationToken)
+    {
+        var fileContent = request.File.OpenReadStream(request.File.Size, cancellationToken);
+
+        using var content = new MultipartFormDataContent();
+        content.Add(new StreamContent(fileContent), "image", request.File.Name);
+
+        var response = await _httpClient.PostAsync(UploadTrailImageRequest.RouteTemplate.Replace("{trailId}", request.TrailId.ToString()), content, cancellationToken);
+
+        if (response.IsSuccessStatusCode)
         {
-            _httpClient = httpClient;
+            var uploadSuccessful = await response.Content.ReadAsStringAsync(cancellationToken: cancellationToken);
+            return new UploadTrailImageRequest.Response(uploadSuccessful);
         }
-
-        public async Task<UploadTrailImageRequest.Response> Handle(UploadTrailImageRequest request, CancellationToken cancellationToken)
+        else
         {
-            var fileContent = request.File.OpenReadStream(request.File.Size, cancellationToken);
-
-            using var content = new MultipartFormDataContent();
-            content.Add(new StreamContent(fileContent), "image", request.File.Name);
-
-            var response = await _httpClient.PostAsync(UploadTrailImageRequest.RouteTemplate.Replace("{trailId}", request.TrailId.ToString()), content, cancellationToken);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var uploadSuccessful = await response.Content.ReadAsStringAsync(cancellationToken: cancellationToken);
-                return new UploadTrailImageRequest.Response(uploadSuccessful);
-            }
-            else
-            {
-                return new UploadTrailImageRequest.Response("");
-            }
+            return new UploadTrailImageRequest.Response("");
         }
     }
 }

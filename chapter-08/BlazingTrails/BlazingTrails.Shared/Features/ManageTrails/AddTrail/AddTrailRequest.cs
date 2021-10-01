@@ -2,20 +2,19 @@
 using FluentValidation;
 using MediatR;
 
-namespace BlazingTrails.Shared.Features.ManageTrails.AddTrail
+namespace BlazingTrails.Shared.Features.ManageTrails.AddTrail;
+
+public record AddTrailRequest(TrailDto Trail) : IRequest<AddTrailRequest.Response>
 {
-    public record AddTrailRequest(TrailDto Trail) : IRequest<AddTrailRequest.Response>
-    {
-        public const string RouteTemplate = "/api/trails";
+    public const string RouteTemplate = "/api/trails";
 
-        public record Response(int TrailId);
-    }
+    public record Response(int TrailId);
+}
 
-    public class AddTrailRequestValidator : AbstractValidator<AddTrailRequest>
+public class AddTrailRequestValidator : AbstractValidator<AddTrailRequest>
+{
+    public AddTrailRequestValidator()
     {
-        public AddTrailRequestValidator()
-        {
-            RuleFor(_ => _.Trail).SetValidator(new TrailValidator());
-        }
+        RuleFor(x => x.Trail).SetValidator(new TrailValidator());
     }
 }
