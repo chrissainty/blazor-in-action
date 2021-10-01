@@ -39,7 +39,6 @@
             }
         </FormFieldSet>
 
-
     </FormSection>
 
     <FormSection Title="Difficulty"
@@ -111,11 +110,11 @@
 
 @code {
     private TrailDto _trail = new TrailDto();
-    private IBrowserFile trailImage;
-    private EditContext _editContext;
+    private IBrowserFile? _trailImage;
+    private EditContext _editContext = default!;
 
-    [Parameter] public Func<TrailDto, IBrowserFile, Task> OnSubmit { get; set; }
-    [Parameter] public TrailDto Trail { get; set; }
+    [Parameter, EditorRequired] public Func<TrailDto, IBrowserFile?, Task> OnSubmit { get; set; } = default!;
+    [Parameter] public TrailDto? Trail { get; set; }
 
 
     public void ResetForm()
@@ -123,7 +122,7 @@
         _trail = new TrailDto();
         _editContext = new EditContext(_trail);
         _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
-        trailImage = null;
+        _trailImage = null;
     }
 
     protected override void OnParametersSet()
@@ -143,26 +142,26 @@
             _trail.TimeInMinutes = Trail.TimeInMinutes;
 
             _trail.Route.Clear();
-            _trail.Route.AddRange(Trail.Route.Select(_ => new TrailDto.RouteInstruction
+            _trail.Route.AddRange(Trail.Route.Select(ri => new TrailDto.RouteInstruction
             {
-                Stage = _.Stage,
-                Description = _.Description
+                Stage = ri.Stage,
+                Description = ri.Description
             }));
         }
     }
 
     private void LoadTrailImage(InputFileChangeEventArgs e)
     {
-        trailImage = e.File;
+        _trailImage = e.File;
         _trail.ImageAction = ImageAction.Add;
     }
 
     private void RemoveTrailImage()
     {
-        _trail.Image = "";
+        _trail.Image = null;
         _trail.ImageAction = ImageAction.Remove;
     }
 
-    private async Task SubmitForm() => await OnSubmit(_trail, trailImage);
+    private async Task SubmitForm() => await OnSubmit(_trail, _trailImage);
 
 }

@@ -2,6 +2,8 @@
 @attribute [Authorize]
 @inject IMediator Mediator
 
+<PageTitle>Add Trail - Blazing Trails</PageTitle>
+
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -15,7 +17,7 @@
 {
     <SuccessAlert Message="Your trail has been added successfully!" />
 }
-else if (_errorMessage.Length > 0)
+else if (_errorMessage is not null)
 {
     <ErrorAlert Message="@_errorMessage" />
 }
@@ -24,8 +26,8 @@ else if (_errorMessage.Length > 0)
 
 @code {
     private bool _submitSuccessful;
-    private string _errorMessage = "";
-    private TrailForm _trailForm;
+    private string? _errorMessage;
+    private TrailForm? _trailForm;
 
     private async Task SubmitNewTrail(TrailDto trail, IBrowserFile image)
     {
@@ -41,7 +43,7 @@ else if (_errorMessage.Length > 0)
         if (image is null)
         {
             _submitSuccessful = true;
-            _trailForm.ResetForm();
+            _trailForm?.ResetForm();
             StateHasChanged();
             return;
         }
@@ -50,7 +52,7 @@ else if (_errorMessage.Length > 0)
 
         if (_submitSuccessful)
         {
-            _trailForm.ResetForm();
+            _trailForm?.ResetForm();
         }
 
         StateHasChanged();

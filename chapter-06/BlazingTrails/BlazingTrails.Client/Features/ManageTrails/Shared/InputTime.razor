@@ -12,8 +12,8 @@
 </div>
 
 @code {
-    private int _hours = 0;
-    private int _minutes = 0;
+    private int _hours;
+    private int _minutes;
 
     protected override void OnParametersSet()
     {
@@ -24,18 +24,18 @@
         }
     }
 
-    protected override bool TryParseValueFromString(string value, out int result, out string validationErrorMessage) 
+    protected override bool TryParseValueFromString(string? value, out int result, out string validationErrorMessage) 
         => throw new NotImplementedException();
 
     private void SetHourValue(ChangeEventArgs args)
     {
-        int.TryParse(args.Value.ToString(), out _hours);
+        int.TryParse(args.Value?.ToString(), out _hours);
         SetCurrentValue();
     }
 
     private void SetMinuteValue(ChangeEventArgs args)
     {
-        int.TryParse(args.Value.ToString(), out _minutes);
+        int.TryParse(args.Value?.ToString(), out _minutes);
         SetCurrentValue();
     }
 

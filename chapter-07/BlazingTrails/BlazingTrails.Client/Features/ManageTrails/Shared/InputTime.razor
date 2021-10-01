@@ -6,14 +6,14 @@
         <label>Hours</label>
     </div>
     <div>
-        <input class="form-control @CssClass" type="number" min="0" max="60" @onchange="SetMinuteValue" value="@_minutes" />
+        <input class="form-control @CssClass" type="number" min="0" max="59" @onchange="SetMinuteValue" value="@_minutes" />
         <label>Minutes</label>
     </div>
 </div>
 
 @code {
-    private int _hours = 0;
-    private int _minutes = 0;
+    private int _hours;
+    private int _minutes;
 
     protected override void OnParametersSet()
     {
@@ -24,30 +24,21 @@
         }
     }
 
-    protected override bool TryParseValueFromString(string value, out int result, out string validationErrorMessage)
-    {
-        if (int.TryParse(value, out result))
-        {
-            validationErrorMessage = null;
-            return true;
-        }
-
-        validationErrorMessage = "Unable to convert value to a valid integer";
-        return false;
-    }
+    protected override bool TryParseValueFromString(string? value, out int result, out string validationErrorMessage) 
+        => throw new NotImplementedException();
 
     private void SetHourValue(ChangeEventArgs args)
     {
-        int.TryParse(args.Value.ToString(), out _hours);
+        int.TryParse(args.Value?.ToString(), out _hours);
         SetCurrentValue();
     }
 
     private void SetMinuteValue(ChangeEventArgs args)
     {
-        int.TryParse(args.Value.ToString(), out _minutes);
+        int.TryParse(args.Value?.ToString(), out _minutes);
         SetCurrentValue();
     }
 
-    private void SetCurrentValue() => CurrentValue = (_hours * 60) + _minutes;
+    private void SetCurrentValue()
+        => CurrentValue = (_hours * 60) + _minutes;
 }
-

@@ -79,11 +79,11 @@
 
 @code {
     private TrailDto _trail = new TrailDto();
-    private IBrowserFile trailImage;
-    private EditContext _editContext;
+    private IBrowserFile? _trailImage;
+    private EditContext _editContext = default!;
 
-    [Parameter] public Func<TrailDto, IBrowserFile, Task> OnSubmit { get; set; }
-    [Parameter] public TrailDto Trail { get; set; }
+    [Parameter, EditorRequired] public Func<TrailDto, IBrowserFile?, Task> OnSubmit { get; set; } = default!;
+    [Parameter] public TrailDto? Trail { get; set; }
 
 
     public void ResetForm()
@@ -91,7 +91,7 @@
         _trail = new TrailDto();
         _editContext = new EditContext(_trail);
         _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
-        trailImage = null;
+        _trailImage = null;
     }
 
     protected override void OnParametersSet()
@@ -111,22 +111,22 @@
             _trail.TimeInMinutes = Trail.TimeInMinutes;
 
             _trail.Waypoints.Clear();
-            _trail.Waypoints.AddRange(Trail.Waypoints.Select(_ => new TrailDto.WaypointDto(_.Latitude, _.Longitude)));
+            _trail.Waypoints.AddRange(Trail.Waypoints.Select(wp => new TrailDto.WaypointDto(wp.Latitude, wp.Longitude)));
         }
     }
 
     private void LoadTrailImage(InputFileChangeEventArgs e)
     {
-        trailImage = e.File;
+        _trailImage = e.File;
         _trail.ImageAction = ImageAction.Add;
     }
 
     private void RemoveTrailImage()
     {
-        _trail.Image = "";
+        _trail.Image = null;
         _trail.ImageAction = ImageAction.Remove;
     }
 
-    private async Task SubmitForm() => await OnSubmit(_trail, trailImage);
+    private async Task SubmitForm() => await OnSubmit(_trail, _trailImage);
 
 }

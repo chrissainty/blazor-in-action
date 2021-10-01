@@ -1,31 +1,27 @@
 ﻿using BlazingTrails.Shared.Features.Home.Shared;
 using MediatR;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace BlazingTrails.Client.Features.Home.Shared
+namespace BlazingTrails.Client.Features.Home.Shared;
+
+public class GetTrailsHandler : IRequestHandler<GetTrailsRequest, GetTrailsRequest.Response?>
 {
-    public class GetTrailsHandler : IRequestHandler<GetTrailsRequest, GetTrailsRequest.Response>
+    private readonly HttpClient _httpClient;
+
+    public GetTrailsHandler(HttpClient httpClient)
     {
-        private readonly HttpClient _httpClient;
+        _httpClient = httpClient;
+    }
 
-        public GetTrailsHandler(HttpClient httpClient)
+    public async Task<GetTrailsRequest.Response?> Handle(GetTrailsRequest request, CancellationToken cancellationToken)
+    {
+        try
         {
-            _httpClient = httpClient;
+            return await _httpClient.GetFromJsonAsync<GetTrailsRequest.Response>(GetTrailsRequest.RouteTemplate);
         }
-
-        public async Task<GetTrailsRequest.Response> Handle(GetTrailsRequest request, CancellationToken cancellationToken)
+        catch (HttpRequestException)
         {
-            try
-            {
-                return await _httpClient.GetFromJsonAsync<GetTrailsRequest.Response>(GetTrailsRequest.RouteTemplate);
-            }
-            catch (HttpRequestException)
-            {
-                return new GetTrailsRequest.Response(null);
-            }
+            return default!;
         }
     }
 }

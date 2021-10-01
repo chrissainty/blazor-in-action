@@ -1,7 +1,7 @@
 ﻿@page "/search/{SearchTerm}"
-@implements IDisposable
 @inject IMediator Mediator
-@inject NavigationManager NavManager
+
+<PageTitle>Search Trails - Blazing Trails</PageTitle>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -12,7 +12,7 @@
 
 <h3 class="mt-5 mb-4">Search results for "@SearchTerm"</h3>
 
-<SearchFilter SearchTerm="@SearchTerm" />
+<SearchFilter SearchTerm="@SearchTerm" MaxLength="MaxLength" MaxTime="MaxTime" />
 
 @if (_searchResults == null)
 {
@@ -33,33 +33,36 @@ else
 }
 
 @code {
-    private IEnumerable<Trail> _searchResults;
-    private IEnumerable<Trail> _cachedSearchResults;
+    private IEnumerable<Trail>? _searchResults;
+    private IEnumerable<Trail> _cachedSearchResults = Array.Empty<Trail>();
     private Trail? _selectedTrail;
 
-    [Parameter] public string SearchTerm { get; set; }
+    [Parameter] public string SearchTerm { get; set; } = default!;
+    [Parameter, SupplyParameterFromQuery] public int? MaxLength { get; set; }
+    [Parameter, SupplyParameterFromQuery] public int? MaxTime { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             var response = await Mediator.Send(new GetTrailsRequest());
-            var allTrails = response.Trails.Select(_ => new Trail
+            var allTrails = response.Trails.Select(x => new Trail
             {
-                Id = _.Id,
-                Name = _.Name,
-                Image = _.Image,
-                Description = _.Description,
-                Location = _.Location,
-                Length = _.Length,
-                TimeInMinutes = _.TimeInMinutes,
-                Owner = _.Owner
+                Id = x.Id,
+                Name = x.Name,
+                Image = x.Image,
+                Description = x.Description,
+                Location = x.Location,
+                Length = x.Length,
+                TimeInMinutes = x.TimeInMinutes,
+                Owner = x.Owner,
+                Waypoints = x.Waypoints.Select(wp => new BlazingTrails.ComponentLibrary.Map.LatLong(wp.Latitude, wp.Longitude))?.ToList() ?? new List<ComponentLibrary.Map.LatLong>()
             });
 
-            _searchResults = allTrails.Where(_ => _.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase)
-                                           || _.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
+            _searchResults = allTrails.Where(x => x.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase)
+                                           || x.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
             _cachedSearchResults = _searchResults;
-            NavManager.LocationChanged += HandleLocationChanged;
+
             UpdateFilters();
         }
         catch (HttpRequestException ex)
@@ -68,23 +71,21 @@ else
         }
     }
 
-    private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
+    protected override void OnParametersSet()
         => UpdateFilters();
 
     private void UpdateFilters()
     {
         var filters = new List<Func<Trail, bool>>();
-        NavManager.TryGetQueryString<int>("maxlength", out var maxLength);
-        NavManager.TryGetQueryString<int>("maxtime", out var maxTime);
 
-        if (maxLength > 0)
+        if (MaxLength is not null && MaxLength > 0)
         {
-            filters.Add(_ => _.Length <= maxLength);
+            filters.Add(x => x.Length <= MaxLength);
         }
 
-        if (maxTime > 0)
+        if (MaxTime is not null && MaxTime > 0)
         {
-            filters.Add(_ => _.TimeInMinutes <= maxTime * 60);
+            filters.Add(x => x.TimeInMinutes <= MaxTime * 60);
         }
 
         if (filters.Any())
@@ -95,12 +96,7 @@ else
         {
             _searchResults = _cachedSearchResults;
         }
-
-        StateHasChanged();
     }
-
-    public void Dispose()
-        => NavManager.LocationChanged -= HandleLocationChanged;
 
     private void HandleTrailSelected(Trail trail)
         => _selectedTrail = trail;

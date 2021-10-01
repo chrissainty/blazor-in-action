@@ -2,6 +2,8 @@
 @inject AppState AppState
 @implements IDisposable
 
+<PageTitle>Favorite Trails - Blazing Trails</PageTitle>
+
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -16,12 +18,10 @@
     <TrailDetails Trail="_selectedTrail" />
 
     <div class="grid">
-
         @foreach (var trail in AppState.FavoriteTrailsState.FavoriteTrails)
         {
             <TrailCard Trail="trail" OnSelected="HandleTrailSelected" />
         }
-
     </div>
 }
 else

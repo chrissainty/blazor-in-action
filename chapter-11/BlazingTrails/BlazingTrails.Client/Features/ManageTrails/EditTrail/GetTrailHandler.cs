@@ -1,32 +1,28 @@
 ﻿using BlazingTrails.Shared.Features.ManageTrails.EditTrail;
 using MediatR;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace BlazingTrails.Client.Features.ManageTrails.EditTrail
+namespace BlazingTrails.Client.Features.ManageTrails.EditTrail;
+
+public class GetTrailHandler : IRequestHandler<GetTrailRequest, GetTrailRequest.Response?>
 {
-    public class GetTrailHandler : IRequestHandler<GetTrailRequest, GetTrailRequest.Response>
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    public GetTrailHandler(IHttpClientFactory httpClientFactory)
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+        _httpClientFactory = httpClientFactory;
+    }
 
-        public GetTrailHandler(IHttpClientFactory httpClientFactory)
+    public async Task<GetTrailRequest.Response?> Handle(GetTrailRequest request, CancellationToken cancellationToken)
+    {
+        try
         {
-            _httpClientFactory = httpClientFactory;
+            var client = _httpClientFactory.CreateClient("SecureAPIClient");
+            return await client.GetFromJsonAsync<GetTrailRequest.Response>(GetTrailRequest.RouteTemplate.Replace("{trailId}", request.TrailId.ToString()));
         }
-
-        public async Task<GetTrailRequest.Response> Handle(GetTrailRequest request, CancellationToken cancellationToken)
+        catch (HttpRequestException)
         {
-            try
-            {
-                var client = _httpClientFactory.CreateClient("SecureAPIClient");
-                return await client.GetFromJsonAsync<GetTrailRequest.Response>(GetTrailRequest.RouteTemplate.Replace("{trailId}", request.TrailId.ToString()));
-            }
-            catch (HttpRequestException)
-            {
-                return new GetTrailRequest.Response(null);
-            }
+            return null;
         }
     }
 }

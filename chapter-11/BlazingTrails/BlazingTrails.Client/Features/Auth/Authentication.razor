@@ -1,5 +1,5 @@
-﻿@page "/authentication/{action}"
-@using Microsoft.Extensions.Configuration
+﻿@using Microsoft.Extensions.Configuration
+@page "/authentication/{action}"
 
 @inject NavigationManager Navigation
 @inject IConfiguration Configuration
@@ -16,5 +16,5 @@
 </RemoteAuthenticatorView>
 
 @code{
-    [Parameter] public string Action { get; set; }
+    [Parameter] public string? Action { get; set; }
 }

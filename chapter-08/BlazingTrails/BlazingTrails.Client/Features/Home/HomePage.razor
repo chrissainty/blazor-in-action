@@ -2,6 +2,8 @@
 @inject IMediator Mediator
 @inject NavigationManager NavManager
 
+<PageTitle>Blazing Trails</PageTitle>
+
 @if (_trails == null)
 {
     <p>Loading trails...</p>
@@ -58,7 +60,7 @@ else
 }
 
 @code {
-    private IEnumerable<Trail> _trails;
+    private IEnumerable<Trail>? _trails;
     private Trail? _selectedTrail;
 
     protected override async Task OnInitializedAsync()
@@ -66,17 +68,17 @@ else
         try
         {
             var response = await Mediator.Send(new GetTrailsRequest());
-            _trails = response.Trails.Select(_ => new Trail
+            _trails = response.Trails.Select(x => new Trail
             {
-                Id = _.Id,
-                Name = _.Name,
-                Image = _.Image,
-                Description = _.Description,
-                Location = _.Location,
-                Length = _.Length,
-                TimeInMinutes = _.TimeInMinutes,
-                Waypoints = _.Waypoints.Select(_ => new BlazingTrails.ComponentLibrary.Map.LatLong(_.Latitude, _.Longitude))?.ToList()
-            }); ;
+                Id = x.Id,
+                Name = x.Name,
+                Image = x.Image,
+                Description = x.Description,
+                Location = x.Location,
+                Length = x.Length,
+                TimeInMinutes = x.TimeInMinutes,
+                Waypoints = x.Waypoints.Select(wp => new BlazingTrails.ComponentLibrary.Map.LatLong(wp.Latitude, wp.Longitude))?.ToList() ?? new List<ComponentLibrary.Map.LatLong>()
+            });
         }
         catch (HttpRequestException ex)
         {

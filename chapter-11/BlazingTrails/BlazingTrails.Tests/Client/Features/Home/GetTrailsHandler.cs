@@ -4,8 +4,8 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BlazingTrails.Tests.Client.Features.Home
-{
+namespace BlazingTrails.Tests.Client.Features.Home;
+
     public class GetTrailsHandler : IRequestHandler<GetTrailsRequest, GetTrailsRequest.Response>
     {
         public async Task<GetTrailsRequest.Response> Handle(GetTrailsRequest request, CancellationToken cancellationToken)
@@ -16,4 +16,3 @@ namespace BlazingTrails.Tests.Client.Features.Home
             return new GetTrailsRequest.Response(dummyTrails);
         }
     }
-}

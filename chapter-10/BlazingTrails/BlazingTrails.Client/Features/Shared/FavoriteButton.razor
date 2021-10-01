@@ -14,5 +14,5 @@ else
 }
 
 @code {
-    [Parameter] public Trail Trail { get; set; }
+    [Parameter, EditorRequired] public Trail Trail { get; set; } = default!;
 }

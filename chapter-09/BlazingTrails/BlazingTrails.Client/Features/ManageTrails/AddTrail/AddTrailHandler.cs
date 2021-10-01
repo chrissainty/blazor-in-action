@@ -1,35 +1,31 @@
 ﻿using BlazingTrails.Shared.Features.ManageTrails.AddTrail;
 using MediatR;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace BlazingTrails.Client.Features.ManageTrails.AddTrail
+namespace BlazingTrails.Client.Features.ManageTrails.AddTrail;
+
+public class AddTrailHandler : IRequestHandler<AddTrailRequest, AddTrailRequest.Response>
 {
-    public class AddTrailHandler : IRequestHandler<AddTrailRequest, AddTrailRequest.Response>
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    public AddTrailHandler(IHttpClientFactory httpClientFactory)
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+        _httpClientFactory = httpClientFactory;
+    }
 
-        public AddTrailHandler(IHttpClientFactory httpClientFactory)
+    public async Task<AddTrailRequest.Response> Handle(AddTrailRequest request, CancellationToken cancellationToken)
+    {
+        var client = _httpClientFactory.CreateClient("SecureAPIClient");
+        var response = await client.PostAsJsonAsync(AddTrailRequest.RouteTemplate, request, cancellationToken);
+
+        if (response.IsSuccessStatusCode)
         {
-            _httpClientFactory = httpClientFactory;
+            var trailId = await response.Content.ReadFromJsonAsync<int>(cancellationToken: cancellationToken);
+            return new AddTrailRequest.Response(trailId);
         }
-
-        public async Task<AddTrailRequest.Response> Handle(AddTrailRequest request, CancellationToken cancellationToken)
+        else
         {
-            var client = _httpClientFactory.CreateClient("SecureAPIClient");
-            var response = await client.PostAsJsonAsync(AddTrailRequest.RouteTemplate, request, cancellationToken);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var trailId = await response.Content.ReadFromJsonAsync<int>(cancellationToken: cancellationToken);
-                return new AddTrailRequest.Response(trailId);
-            }
-            else
-            {
-                return new AddTrailRequest.Response(-1);
-            }
+            return new AddTrailRequest.Response(-1);
         }
     }
 }

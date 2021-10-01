@@ -14,6 +14,6 @@
 </div>
 
 @code {
-    [Parameter] public Trail Trail { get; set; }
-    [Parameter] public EventCallback<Trail> OnSelected { get; set; }
+    [Parameter, EditorRequired] public Trail Trail { get; set; } = default!;
+    [Parameter, EditorRequired] public EventCallback<Trail> OnSelected { get; set; }
 }

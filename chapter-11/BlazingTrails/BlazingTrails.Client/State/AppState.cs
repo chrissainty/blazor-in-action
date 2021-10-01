@@ -1,28 +1,26 @@
 ﻿using Blazored.LocalStorage;
-using System.Threading.Tasks;
 
-namespace BlazingTrails.Client.State
+namespace BlazingTrails.Client.State;
+
+public class AppState
 {
-    public class AppState
+    private bool _isInitialized;
+
+    public NewTrailState NewTrailState { get; }
+    public FavoriteTrailsState FavoriteTrailsState { get; }
+
+    public AppState(ILocalStorageService localStorageService)
     {
-        private bool _isInitialized;
+        NewTrailState = new NewTrailState();
+        FavoriteTrailsState = new FavoriteTrailsState(localStorageService);
+    }
 
-        public AddTrailState AddTrailState { get; }
-        public FavoriteTrailsState FavoriteTrailsState { get; }
-
-        public AppState(ILocalStorageService localStorageService)
+    public async Task Initialize()
+    {
+        if (!_isInitialized)
         {
-            AddTrailState = new AddTrailState();
-            FavoriteTrailsState = new FavoriteTrailsState(localStorageService);
-        }
-
-        public async Task Initialize()
-        {
-            if (!_isInitialized)
-            {
-                await FavoriteTrailsState.Initialize();
-                _isInitialized = true;
-            }
+            await FavoriteTrailsState.Initialize();
+            _isInitialized = true;
         }
     }
 }
