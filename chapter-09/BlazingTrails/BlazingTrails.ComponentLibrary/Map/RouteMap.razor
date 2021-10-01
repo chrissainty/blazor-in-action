@@ -1,4 +1,5 @@
-﻿@inject IJSRuntime JSRuntime
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
 @implements IAsyncDisposable
 @implements IDisposable
 
@@ -18,8 +19,8 @@
 @code {
 
     private ElementReference _map;
-    private DotNetObjectReference<RouteMap> _routeMapReference;
-    private IJSObjectReference _routeMapModule;
+    private DotNetObjectReference<RouteMap>? _routeMapReference;
+    private IJSObjectReference? _routeMapModule;
 
     [Parameter] public string Height { get; set; } = "500px";
     [Parameter] public string Width { get; set; } = "1000px";
@@ -40,8 +41,11 @@
 
     public async Task DeleteLastWaypoint()
     {
-        var waypoint = await _routeMapModule.InvokeAsync<LatLong>("deleteLastWaypoint", _map, _routeMapReference);
-        await OnWaypointDeleted.InvokeAsync(waypoint);
+        if (_routeMapModule is not null)
+        {
+            var waypoint = await _routeMapModule.InvokeAsync<LatLong>("deleteLastWaypoint", _map, _routeMapReference);
+            await OnWaypointDeleted.InvokeAsync(waypoint);
+        }
     }
 
     [JSInvokable]

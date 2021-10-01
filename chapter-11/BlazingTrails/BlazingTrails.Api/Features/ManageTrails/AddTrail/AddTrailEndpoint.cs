@@ -24,7 +24,6 @@ public class AddTrailEndpoint : BaseAsyncEndpoint.WithRequest<AddTrailRequest>.W
             Location = request.Trail.Location,
             TimeInMinutes = request.Trail.TimeInMinutes,
             Length = request.Trail.Length,
-            IsFavourite = false,
             Owner = HttpContext.User.Identity!.Name!,
             Waypoints = request.Trail.Waypoints.Select(wp => new Waypoint
             {

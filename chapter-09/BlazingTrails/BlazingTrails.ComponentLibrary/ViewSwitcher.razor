@@ -44,8 +44,8 @@
 @code {
     private string _mode = "Grid";
 
-    [Parameter] public IEnumerable<TItem> Items { get; set; }
-    [Parameter] public RenderFragment<TItem> GridTemplate { get; set; }
-    [Parameter] public RenderFragment HeaderTemplate { get; set; }
-    [Parameter] public RenderFragment<TItem> RowTemplate { get; set; }
+    [Parameter, EditorRequired] public IEnumerable<TItem> Items { get; set; } = default!;
+    [Parameter, EditorRequired] public RenderFragment<TItem> GridTemplate { get; set; } = default!;
+    [Parameter, EditorRequired] public RenderFragment HeaderTemplate { get; set; } = default!;
+    [Parameter, EditorRequired] public RenderFragment<TItem> RowTemplate { get; set; } = default!;
 }

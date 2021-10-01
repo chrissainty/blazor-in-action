@@ -1,39 +1,35 @@
 ﻿using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication.Internal;
-using System;
-using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace BlazingTrails.Client.Features.Auth
+namespace BlazingTrails.Client.Features.Auth;
+
+public class CustomUserFactory<TAccount> : AccountClaimsPrincipalFactory<RemoteUserAccount>
 {
-    public class CustomUserFactory<TAccount> : AccountClaimsPrincipalFactory<RemoteUserAccount>
+    public CustomUserFactory(IAccessTokenProviderAccessor accessor) : base(accessor) { }
+
+    public async override ValueTask<ClaimsPrincipal> CreateUserAsync(RemoteUserAccount account, RemoteAuthenticationUserOptions options)
     {
-        public CustomUserFactory(IAccessTokenProviderAccessor accessor) : base(accessor) { }
+        var initialUser = await base.CreateUserAsync(account, options);
 
-        public async override ValueTask<ClaimsPrincipal> CreateUserAsync(RemoteUserAccount account, RemoteAuthenticationUserOptions options)
+        if (initialUser?.Identity?.IsAuthenticated ?? false)
         {
-            var initialUser = await base.CreateUserAsync(account, options);
+            var userIdentity = (ClaimsIdentity)initialUser.Identity;
 
-            if (initialUser.Identity.IsAuthenticated)
+            account.AdditionalProperties.TryGetValue(ClaimTypes.Role, out var roleClaimValue);
+
+            if (roleClaimValue is not null && roleClaimValue is JsonElement element && element.ValueKind == JsonValueKind.Array)
             {
-                var userIdentity = (ClaimsIdentity)initialUser.Identity;
+                userIdentity.RemoveClaim(userIdentity.FindFirst(ClaimTypes.Role));
 
-                account.AdditionalProperties.TryGetValue(ClaimTypes.Role, out var roleClaimValue);
+                var claims = element.EnumerateArray()
+                                    .Select(x => new Claim(ClaimTypes.Role, x.ToString()));
 
-                if (roleClaimValue is not null && roleClaimValue is JsonElement element && element.ValueKind == JsonValueKind.Array)
-                {
-                    userIdentity.RemoveClaim(userIdentity.FindFirst(ClaimTypes.Role));
-
-                    var claims = element.EnumerateArray()
-                                        .Select(x => new Claim(ClaimTypes.Role, x.ToString()));
-
-                    userIdentity.AddClaims(claims);
-                }
+                userIdentity.AddClaims(claims);
             }
-
-            return initialUser;
         }
+
+        return initialUser ?? new ClaimsPrincipal();
     }
 }

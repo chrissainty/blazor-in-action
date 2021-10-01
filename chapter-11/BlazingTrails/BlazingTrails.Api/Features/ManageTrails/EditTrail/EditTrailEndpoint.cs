@@ -1,5 +1,4 @@
-﻿using BlazingTrails.Api.Persistance.Entities;
-using BlazingTrails.Api.Persistence;
+﻿using BlazingTrails.Api.Persistence;
 using BlazingTrails.Shared.Features.ManageTrails.EditTrail;
 using BlazingTrails.Shared.Features.ManageTrails.Shared;
 

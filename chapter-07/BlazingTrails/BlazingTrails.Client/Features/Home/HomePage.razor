@@ -68,15 +68,15 @@ else
         try
         {
             var response = await Mediator.Send(new GetTrailsRequest());
-            _trails = response.Trails.Select(_ => new Trail
+            _trails = response.Trails.Select(x => new Trail
             {
-                Id = _.Id,
-                Name = _.Name,
-                Image = _.Image,
-                Description = _.Description,
-                Location = _.Location,
-                Length = _.Length,
-                TimeInMinutes = _.TimeInMinutes
+                Id = x.Id,
+                Name = x.Name,
+                Image = x.Image,
+                Description = x.Description,
+                Location = x.Location,
+                Length = x.Length,
+                TimeInMinutes = x.TimeInMinutes
             });
         }
         catch (HttpRequestException ex)

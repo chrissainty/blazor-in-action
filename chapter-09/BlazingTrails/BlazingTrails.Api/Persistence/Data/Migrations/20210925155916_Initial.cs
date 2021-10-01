@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace BlazingTrails.Api.Persistance.Data.Migrations
+#nullable disable
+
+namespace BlazingTrails.Api.Persistence.Data.Migrations
 {
     public partial class Initial : Migration
     {
@@ -17,8 +19,7 @@ namespace BlazingTrails.Api.Persistance.Data.Migrations
                     Image = table.Column<string>(type: "TEXT", nullable: true),
                     Location = table.Column<string>(type: "TEXT", nullable: false),
                     TimeInMinutes = table.Column<int>(type: "INTEGER", nullable: false),
-                    Length = table.Column<int>(type: "INTEGER", nullable: false),
-                    IsFavourite = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Length = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

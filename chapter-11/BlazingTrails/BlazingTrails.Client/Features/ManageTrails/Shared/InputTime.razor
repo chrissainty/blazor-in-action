@@ -29,13 +29,13 @@
 
     private void SetHourValue(ChangeEventArgs args)
     {
-        int.TryParse(args?.Value?.ToString(), out _hours);
+        int.TryParse(args.Value?.ToString(), out _hours);
         SetCurrentValue();
     }
 
     private void SetMinuteValue(ChangeEventArgs args)
     {
-        int.TryParse(args?.Value?.ToString(), out _minutes);
+        int.TryParse(args.Value?.ToString(), out _minutes);
         SetCurrentValue();
     }
 
