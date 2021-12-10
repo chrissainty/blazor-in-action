@@ -63,12 +63,12 @@ else
 
         if (MaxLength is not null && MaxLength > 0)
         {
-            filters.Add(_ => _.Length <= MaxLength);
+            filters.Add(x => x.Length <= MaxLength);
         }
 
         if (MaxTime is not null && MaxTime > 0)
         {
-            filters.Add(_ => _.TimeInMinutes <= MaxTime * 60);
+            filters.Add(x => x.TimeInMinutes <= MaxTime * 60);
         }
 
         if (filters.Any())

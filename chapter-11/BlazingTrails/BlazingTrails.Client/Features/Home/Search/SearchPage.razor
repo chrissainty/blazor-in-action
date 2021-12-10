@@ -38,8 +38,8 @@ else
     private Trail? _selectedTrail;
 
     [Parameter] public string SearchTerm { get; set; } = default!;
-    [Parameter, SupplyParameterFromQuery] public int MaxLength { get; set; }
-    [Parameter, SupplyParameterFromQuery] public int MaxTime { get; set; }
+    [Parameter, SupplyParameterFromQuery] public int? MaxLength { get; set; }
+    [Parameter, SupplyParameterFromQuery] public int? MaxTime { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

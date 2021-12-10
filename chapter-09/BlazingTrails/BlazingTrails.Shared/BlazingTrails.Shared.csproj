@@ -7,9 +7,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FluentValidation" Version="10.3.3" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Forms" Version="6.0.0-rc.1.21452.15" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0-rc.1.21452.15" />
+		<PackageReference Include="FluentValidation" Version="10.3.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Forms" Version="6.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
 		<PackageReference Include="MediatR" Version="9.0.0" />
 	</ItemGroup>
 

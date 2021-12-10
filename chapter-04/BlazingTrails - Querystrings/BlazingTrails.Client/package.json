@@ -3,6 +3,6 @@
         "sass": "sass"
     },
     "devDependencies": {
-        "sass": "1.33.0"
+        "sass": "1.44.0"
     }
 }

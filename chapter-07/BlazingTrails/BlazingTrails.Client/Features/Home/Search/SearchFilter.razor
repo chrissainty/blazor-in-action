@@ -26,13 +26,13 @@
     private int _maxTime;
 
     [Parameter, EditorRequired] public string SearchTerm { get; set; } = default!;
-    [Parameter] public int MaxLength { get; set; }
-    [Parameter] public int MaxTime { get; set; }
+    [Parameter] public int? MaxLength { get; set; }
+    [Parameter] public int? MaxTime { get; set; }
 
     protected override void OnInitialized()
     {
-        _maxLength = MaxLength;
-        _maxTime = MaxTime;
+        _maxLength = MaxLength ?? 0;
+        _maxTime = MaxTime ?? 0;
     }
 
     private void FilterSearchResults()
