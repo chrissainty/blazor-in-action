@@ -53,7 +53,7 @@ else
             _trail.Image = response.Trail.Image;
             _trail.Length = response.Trail.Length;
             _trail.TimeInMinutes = response.Trail.TimeInMinutes;
-            _trail.Waypoints.AddRange(response.Trail.Waypoints.Select(_ => new TrailDto.WaypointDto(_.Latitude, _.Longitude)));
+            _trail.Waypoints.AddRange(response.Trail.Waypoints.Select(wp => new TrailDto.WaypointDto(wp.Latitude, wp.Longitude)));
         }
         else
         {
@@ -79,7 +79,7 @@ else
             _trail.Length = trail.Length;
             _trail.TimeInMinutes = trail.TimeInMinutes;
             _trail.Waypoints.Clear();
-            _trail.Waypoints.AddRange(trail.Waypoints.Select(_ => new TrailDto.WaypointDto(_.Latitude, _.Longitude)));
+            _trail.Waypoints.AddRange(trail.Waypoints.Select(wp => new TrailDto.WaypointDto(wp.Latitude, wp.Longitude)));
 
             _submitSuccessful = true;
 
