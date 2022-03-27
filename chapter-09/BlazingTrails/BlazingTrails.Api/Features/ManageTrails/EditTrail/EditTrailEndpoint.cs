@@ -29,7 +29,7 @@ public class EditTrailEndpoint : BaseAsyncEndpoint.WithRequest<EditTrailRequest>
             return BadRequest("Trail could not be found.");
         }
 
-        if (!trail.Owner.Equals(HttpContext.User.Identity!.Name, StringComparison.CurrentCultureIgnoreCase) && !HttpContext.User.IsInRole("Administrator"))
+        if (!trail.Owner.Equals(HttpContext.User.Identity!.Name, StringComparison.OrdinalIgnoreCase) && !HttpContext.User.IsInRole("Administrator"))
         {
             return Unauthorized();
         }
