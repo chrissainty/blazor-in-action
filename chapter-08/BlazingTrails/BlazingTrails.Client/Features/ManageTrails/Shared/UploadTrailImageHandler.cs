@@ -23,8 +23,8 @@ public class UploadTrailImageHandler : IRequestHandler<UploadTrailImageRequest, 
 
         if (response.IsSuccessStatusCode)
         {
-            var uploadSuccessful = await response.Content.ReadAsStringAsync(cancellationToken: cancellationToken);
-            return new UploadTrailImageRequest.Response(uploadSuccessful);
+            var fileName = await response.Content.ReadAsStringAsync(cancellationToken: cancellationToken);
+            return new UploadTrailImageRequest.Response(fileName);
         }
         else
         {

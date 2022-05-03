@@ -82,6 +82,7 @@ else
             _trail.Location = trail.Location;
             _trail.Length = trail.Length;
             _trail.TimeInMinutes = trail.TimeInMinutes;
+            _trail.Route.Clear();
             _trail.Route.AddRange(trail.Route.Select(ri => new TrailDto.RouteInstruction
 
             {

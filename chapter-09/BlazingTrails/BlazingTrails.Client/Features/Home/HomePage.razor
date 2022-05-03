@@ -47,7 +47,7 @@ else
                 <td>@trail.TimeFormatted</td>
                 <td class="text-right">
                     <AuthorizeView>
-                        @if (trail.Owner.Equals(context.User.Identity?.Name, StringComparison.CurrentCultureIgnoreCase) || context.User.IsInRole("Administrator"))
+                        @if (trail.Owner.Equals(context.User.Identity?.Name, StringComparison.OrdinalIgnoreCase) || context.User.IsInRole("Administrator"))
                         {
                             <button @onclick="@(() => NavManager.NavigateTo($"/edit-trail/{trail.Id}"))" title="Edit" class="btn btn-outline-secondary">
                                 <i class="bi bi-pencil"></i>

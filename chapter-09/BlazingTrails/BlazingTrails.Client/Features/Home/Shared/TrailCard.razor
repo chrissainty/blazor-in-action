@@ -13,7 +13,7 @@
             <i class="bi bi-binoculars"></i>
         </button>
         <AuthorizeView>
-            @if (Trail.Owner.Equals(context.User.Identity?.Name, StringComparison.CurrentCultureIgnoreCase) || context.User.IsInRole("Administrator"))
+            @if (Trail.Owner.Equals(context.User.Identity?.Name, StringComparison.OrdinalIgnoreCase) || context.User.IsInRole("Administrator"))
             {
                 <button class="btn btn-outline-secondary float-right" title="Edit" @onclick="@(() => NavManager.NavigateTo($"/edit-trail/{Trail.Id}"))">
                     <i class="bi bi-pencil"></i>

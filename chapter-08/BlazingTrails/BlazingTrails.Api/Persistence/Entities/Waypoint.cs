@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BlazingTrails.Api.Persistance.Entities;
+namespace BlazingTrails.Api.Persistence.Entities;
 
 public class Waypoint
 {
