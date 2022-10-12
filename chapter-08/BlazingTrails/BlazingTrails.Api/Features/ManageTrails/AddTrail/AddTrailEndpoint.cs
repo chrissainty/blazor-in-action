@@ -1,5 +1,5 @@
 ﻿using Ardalis.ApiEndpoints;
-using BlazingTrails.Api.Persistance.Entities;
+using BlazingTrails.Api.Persistence.Entities;
 using BlazingTrails.Api.Persistence;
 using BlazingTrails.Shared.Features.ManageTrails.AddTrail;
 using Microsoft.AspNetCore.Mvc;
