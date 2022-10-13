@@ -1,4 +1,4 @@
-﻿using BlazingTrails.Api.Persistance.Entities;
+﻿using BlazingTrails.Api.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlazingTrails.Api.Persistence;
